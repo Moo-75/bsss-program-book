@@ -1,0 +1,66 @@
+# 15th BSSS 모바일 프로그램북
+
+GitHub Pages에 배포할 수 있는 정적 웹사이트입니다. 별도의 설치나 빌드가 필요하지 않습니다. `index.html`, `styles.css`, `app.js`, `data.js`, `assets/`를 같은 상대 위치로 유지해 주세요.
+
+디자인은 포스터 최종본(`2026_poster_draft_4`)을 따릅니다. 색(`#EEE2DF` 배경, `#0E5AAA` 코발트, `#82AFDD` 연파랑), BoonTook 글꼴, 왼쪽 BSSS 띠, 포스터 일러스트를 그대로 사용합니다.
+
+## 현재 반영된 정보
+
+- 행사 날짜: 2027년 1월 21일 (목) — 사용자 확인. **포스터 최종본에는 JAN 14로 인쇄되어 있으니 포스터를 확인하세요.**
+- 장소: DGIST E7, L29 (최종 확인 필요)
+- 시간표·발표·포스터·연구실·위원회: 정보 준비 중
+
+실제 발표자 이름, 초록, 일정, 시상 부문을 확인하기 전에는 입력하지 마세요.
+
+## 정보 입력 (`data.js`)
+
+배열에 객체를 추가하면 페이지에 자동으로 표시됩니다. 모든 텍스트는 큰따옴표로 감싸고 각 항목은 쉼표로 구분합니다. 아래는 형식 예시이며 실제 행사가 아닙니다.
+
+```js
+window.SYMPOSIUM = {
+  event: {
+    date: "2027-01-21",              // 당일 '진행 중' 표시에 사용 (YYYY-MM-DD)
+    dateLabel: "2027. 01. 21 (THU)",
+    venue: "DGIST E7, L29",
+    venueNote: "오시는 길 안내 문구",
+    mapUrl: ""                       // 정확한 지도 링크가 있으면 입력
+  },
+  schedule: [
+    // type: opening, keynote, oral, poster, flash, rewarded, award, break, closing
+    // ref: 연결할 발표 id (예: "oral-01") 또는 섹션 id (예: "posters")
+    { time: "10:00–10:50", type: "keynote", title: "Keynote Lecture", speaker: "연사 이름", location: "장소", ref: "keynote-01" }
+  ],
+  keynote:  [{ number: "01", title: "강연 제목", speaker: "연사", affiliation: "소속", time: "10:00", photo: "./assets/speakers/이름.jpg", bio: "소개", abstract: "초록", publications: ["논문 정보"] }],
+  oral:     [{ number: "01", title: "발표 제목", speaker: "발표자", affiliation: "소속", time: "10:50", abstract: "초록" }],
+  posters:  [{ number: "P01", title: "포스터 제목", speaker: "발표자", affiliation: "소속", abstract: "초록" }],
+  flash:    [{ number: "01", title: "발표 제목", speaker: "발표자", affiliation: "소속" }],
+  rewarded: [{ number: "01", title: "발표 제목", speaker: "발표자", affiliation: "소속", abstract: "초록" }],
+  awards:   [{ name: "시상 부문", detail: "설명" }],
+  laboratories: [{ name: "연구실 이름", detail: "기관 및 책임교수" }],
+  committee:    [{ name: "분과 이름", detail: "위원 이름" }]
+};
+```
+
+- 비어 있는 배열(`[]`)은 "준비 중" 안내로 표시됩니다.
+- 초록의 줄바꿈은 `\n`으로 넣습니다. `photo`, `bio`, `publications`는 선택 항목입니다.
+- 시간은 `"10:00–10:20"` 또는 `"10:00"` 형식으로 씁니다. 끝 시간이 없으면 다음 순서 시작까지로 계산합니다.
+
+## 기능
+
+- **당일 진행 표시**: `event.date`와 같은 날에는 시간표에 지금(NOW)·다음(NEXT) 순서가 표시됩니다. 미리 확인하려면 주소 뒤에 `?now=2027-01-21T10:30`을 붙이세요.
+- **발표별 링크**: `주소#oral-01`, `#keynote-01`, `#poster-P01`, `#flash-01`, `#rewarded-01`로 들어오면 해당 초록이 펼쳐집니다. 각 초록의 "이 발표 링크 공유" 버튼으로 복사·공유할 수 있습니다.
+- **포스터 검색**: 번호, 제목, 발표자, 소속 검색과 일치 부분 강조. 포스터가 없을 때는 검색창이 숨겨집니다.
+- **공유 미리보기**: 카카오톡 등에 링크를 보내면 `assets/og-image.jpg`가 표시됩니다. 날짜나 디자인이 바뀌면 이 이미지도 바꿔야 합니다. 일부 메신저는 절대 주소를 요구하므로 Pages 주소가 정해지면 `index.html`의 `og:image`를 `https://.../assets/og-image.jpg`로 바꾸세요.
+
+## 에셋
+
+- `assets/poster-art.webp`, `bsss-band*.webp`, `dgist-logo.png`: 포스터 PDF에서 추출한 그래픽
+- `assets/BoonTook-Regular.woff`: 영문 표제 글꼴(SIL OFL, 라틴 문자만 남긴 subset). 한글은 Pretendard(jsDelivr CDN)로 표시됩니다.
+
+## GitHub Pages 배포
+
+1. 사용할 GitHub 저장소에 이 폴더의 내용물을 올립니다. 저장소 루트에 `index.html`이 위치해야 합니다.
+2. GitHub 저장소의 **Settings → Pages**에서 배포 소스를 해당 브랜치의 `/ (root)`로 설정합니다.
+3. GitHub가 제공하는 Pages 주소를 실제 모바일 기기에서 확인한 뒤 그 주소로 QR 코드를 만듭니다.
+
+저장소와 Pages 주소가 정해지기 전에는 QR 코드를 생성하지 않습니다. 데이터와 웹사이트는 정적 파일이므로 Pages에 게시하는 내용은 방문자가 읽을 수 있습니다.

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0e5aaa">
+  <meta name="color-scheme" content="light">
+  <title>15th BSSS | Program Book</title>
+  <meta name="description" content="15th DGIST Brain Sciences Student Symposium 모바일 프로그램북 · 2027. 01. 21 · DGIST E7 L29">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="15th DGIST BSSS Program Book">
+  <meta property="og:description" content="2027. 01. 21 (THU) · DGIST E7 L29 · 시간표, 발표 초록, 포스터 목록">
+  <meta property="og:url" content="https://moo-75.github.io/bsss-program-book/">
+  <meta property="og:image" content="https://moo-75.github.io/bsss-program-book/assets/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="./assets/bsss-band-vertical.webp">
+  <link rel="preload" href="./assets/BoonTook-Regular.woff" as="font" type="font/woff" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="./styles.css">
+  <script defer src="./data.js"></script>
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+  <header class="band">
+    <a class="band-link" href="#top" aria-label="15th DGIST Brain Sciences Student Symposium, 처음으로">
+      <picture>
+        <source media="(min-width: 960px)" srcset="./assets/bsss-band-vertical.webp" width="280" height="1684">
+        <img src="./assets/bsss-band.webp" width="1400" height="233" alt="BSSS · 15th DGIST Brain Sciences Student Symposium">
+      </picture>
+    </a>
+  </header>
+
+  <main id="main" class="page">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-head">
+        <nav class="hero-program" aria-label="프로그램 구성">
+          <a href="#keynote">KEYNOTE LECTURE</a>
+          <a href="#oral">ORAL PRESENTATION</a>
+          <a href="#posters">POSTER SESSION</a>
+          <a href="#flash">FLASH TALK</a>
+          <a href="#rewarded">REWARDED TALK</a>
+          <a href="#awards">AWARD CEREMONY</a>
+        </nav>
+        <img class="hero-logo" src="./assets/dgist-logo.png" width="440" height="194" alt="DGIST 대구경북과학기술원">
+      </div>
+
+      <div class="hero-art">
+        <img src="./assets/poster-art.webp" width="1100" height="1473" alt="" fetchpriority="high">
+      </div>
+
+      <div class="hero-foot">
+        <p class="hero-venue"><span class="sr-only">장소 </span><span data-event="venueLines">DGIST<br>E7 L29</span></p>
+        <p class="hero-date"><span class="sr-only">날짜 </span>JAN 21<br><span class="dash" aria-hidden="true"></span>2027</p>
+      </div>
+
+      <div class="hero-intro">
+        <h1 id="hero-title">PROGRAM BOOK</h1>
+        <p>15th DGIST Brain Sciences Student Symposium</p>
+        <dl class="hero-meta">
+          <div><dt>DATE</dt><dd data-event="dateLabel">2027. 01. 21 (THU)</dd></div>
+          <div><dt>VENUE</dt><dd data-event="venue">DGIST E7, L29</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <nav class="tabs" aria-label="섹션 바로가기">
+      <div class="tabs-inner">
+        <a href="#schedule">SCHEDULE</a>
+        <a href="#keynote">KEYNOTE</a>
+        <a href="#oral">ORAL</a>
+        <a href="#posters">POSTER</a>
+        <a href="#flash">FLASH TALK</a>
+        <a href="#rewarded">REWARDED</a>
+        <a href="#awards">AWARD</a>
+        <a href="#information">INFO</a>
+      </div>
+    </nav>
+
+    <section class="section" id="schedule" aria-labelledby="schedule-title">
+      <div class="section-head"><span class="section-no">01</span><h2 id="schedule-title">SCHEDULE <span>시간표</span></h2></div>
+      <p class="section-desc">하루의 프로그램을 시간순으로 확인하세요. 행사 당일에는 지금 진행 중인 순서가 표시됩니다.</p>
+      <div id="now-banner" class="now-banner" hidden aria-live="polite"></div>
+      <div id="schedule-content" class="content"></div>
+    </section>
+
+    <section class="section" id="keynote" aria-labelledby="keynote-title">
+      <div class="section-head"><span class="section-no">02</span><h2 id="keynote-title">KEYNOTE LECTURE <span>기조강연</span></h2></div>
+      <p class="section-desc">연사 소개와 강연 초록을 확인하세요.</p>
+      <div id="keynote-content" class="content"></div>
+    </section>
+
+    <section class="section" id="oral" aria-labelledby="oral-title">
+      <div class="section-head"><span class="section-no">03</span><h2 id="oral-title">ORAL PRESENTATION <span>구두발표</span></h2></div>
+      <p class="section-desc">발표 제목을 누르면 초록이 펼쳐집니다.</p>
+      <div id="oral-content" class="content"></div>
+    </section>
+
+    <section class="section" id="posters" aria-labelledby="posters-title">
+      <div class="section-head"><span class="section-no">04</span><h2 id="posters-title">POSTER SESSION <span>포스터 세션</span></h2></div>
+      <p class="section-desc">포스터 번호, 발표자, 제목, 소속으로 찾아보세요.</p>
+      <div class="search" id="poster-search-wrap" hidden>
+        <label class="sr-only" for="poster-search">포스터 검색</label>
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        <input id="poster-search" type="search" placeholder="예: P12, 이름, 키워드" autocomplete="off" enterkeyhint="search">
+        <button id="clear-search" type="button" hidden aria-label="검색어 지우기">×</button>
+      </div>
+      <p id="poster-count" class="result-count" aria-live="polite"></p>
+      <div id="posters-content" class="content"></div>
+    </section>
+
+    <section class="section" id="flash" aria-labelledby="flash-title">
+      <div class="section-head"><span class="section-no">05</span><h2 id="flash-title">FLASH TALK <span>플래시 토크</span></h2></div>
+      <p class="section-desc">짧은 발표로 소개하는 연구들입니다.</p>
+      <div id="flash-content" class="content"></div>
+    </section>
+
+    <section class="section" id="rewarded" aria-labelledby="rewarded-title">
+      <div class="section-head"><span class="section-no">06</span><h2 id="rewarded-title">REWARDED TALK</h2></div>
+      <p class="section-desc">발표자와 연구 내용을 소개합니다.</p>
+      <div id="rewarded-content" class="content"></div>
+    </section>
+
+    <section class="section" id="awards" aria-labelledby="awards-title">
+      <div class="section-head"><span class="section-no">07</span><h2 id="awards-title">AWARD CEREMONY <span>시상</span></h2></div>
+      <p class="section-desc">시상 부문과 진행 안내입니다.</p>
+      <div id="awards-content" class="content"></div>
+    </section>
+
+    <section class="section" id="information" aria-labelledby="information-title">
+      <div class="section-head"><span class="section-no">08</span><h2 id="information-title">INFORMATION <span>행사 안내</span></h2></div>
+      <div class="info-list">
+        <details open>
+          <summary><span>장소 및 오시는 길</span><span class="plus" aria-hidden="true"></span></summary>
+          <div class="detail-body">
+            <p class="venue-name" data-event="venue">DGIST E7, L29</p>
+            <p class="muted" data-event="venueNote">행사장 위치와 상세 안내는 최종 확인 후 업데이트됩니다.</p>
+            <p class="map-links" id="map-links"></p>
+          </div>
+        </details>
+        <details>
+          <summary><span>참여 연구실 <small>LABORATORIES</small></span><span class="plus" aria-hidden="true"></span></summary>
+          <div class="detail-body" id="laboratories-content"></div>
+        </details>
+        <details>
+          <summary><span>운영위원회 <small>ORGANIZING COMMITTEE</small></span><span class="plus" aria-hidden="true"></span></summary>
+          <div class="detail-body" id="committee-content"></div>
+        </details>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <img src="./assets/dgist-logo.png" width="440" height="194" alt="DGIST 대구경북과학기술원" loading="lazy">
+      <p>15TH DGIST<br>BRAIN SCIENCES<br>STUDENT SYMPOSIUM</p>
+      <a class="to-top" href="#top">TOP ↑</a>
+    </footer>
+  </main>
+
+  <div class="fab" id="fab" hidden>
+    <a class="fab-top" href="#top" aria-label="맨 위로">↑</a>
+    <button class="fab-menu" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="section-menu">MENU</button>
+  </div>
+  <dialog class="sheet" id="section-menu" aria-labelledby="sheet-title">
+    <div class="sheet-head">
+      <h2 id="sheet-title">BSSS PROGRAM</h2>
+      <button class="sheet-close" id="menu-close" type="button" aria-label="메뉴 닫기">×</button>
+    </div>
+    <nav class="sheet-links" aria-label="섹션 이동">
+      <a href="#top"><span>00</span>HOME<small>처음으로</small></a>
+      <a href="#schedule"><span>01</span>SCHEDULE<small>시간표</small></a>
+      <a href="#keynote"><span>02</span>KEYNOTE<small>기조강연</small></a>
+      <a href="#oral"><span>03</span>ORAL<small>구두발표</small></a>
+      <a href="#posters"><span>04</span>POSTER<small>포스터 세션</small></a>
+      <a href="#flash"><span>05</span>FLASH TALK<small>플래시 토크</small></a>
+      <a href="#rewarded"><span>06</span>REWARDED<small>Rewarded Talk</small></a>
+      <a href="#awards"><span>07</span>AWARD<small>시상</small></a>
+      <a href="#information"><span>08</span>INFO<small>행사 안내</small></a>
+    </nav>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><div class="noscript">시간표와 발표 목록을 보려면 브라우저에서 JavaScript를 켜 주세요.</div></noscript>
+</body>
+</html>
