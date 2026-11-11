@@ -361,3 +361,69 @@ a.board:hover{transform:translateY(-2px)}
 .map-legend .is-saved::before{background:var(--sky)}
 .map-legend .is-match::before{background:var(--blue)}
 .share-map{margin-right:8px;background:var(--blue);color:var(--paper)}
+
+/* 시간표 (타임라인형): 시간 | 아이콘 점 | 프로그램·연사. 아래 규칙이 위쪽의 예전 시간표 규칙을 덮어쓴다 */
+.schedule-list{--tc:4.1rem;--mk:40px;--gap:12px;--pad:10px;list-style:none;margin:0;padding:6px 0 0}
+.schedule-row{position:relative;display:grid;grid-template-columns:var(--tc) var(--mk) minmax(0,1fr);gap:0 var(--gap);align-items:start;padding:14px var(--pad);border:0;border-radius:14px}
+.schedule-row::before{content:"";position:absolute;top:0;bottom:0;left:calc(var(--pad) + var(--tc) + var(--gap) + var(--mk) / 2 - 1px);width:2px;background:var(--sky);opacity:.55}
+.schedule-row:first-child::before{top:24px}
+.schedule-row:last-child::before{bottom:calc(100% - 24px)}
+.schedule-time{display:grid;justify-items:end;padding-top:6px;line-height:1.1}
+.schedule-time b{font-weight:400;font-size:1.12rem;color:var(--blue)}
+.schedule-time small{display:block;margin-top:3px;font-size:.74rem;color:var(--muted)}
+.schedule-mark{position:relative;z-index:1;display:grid;place-items:center;width:var(--mk);height:var(--mk);border-radius:50%;border:2px solid var(--sky);background:var(--paper);color:var(--blue)}
+.schedule-mark:empty::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--blue)}
+.schedule-icon{display:grid;place-items:center}
+.schedule-info{min-width:0;padding-top:7px}
+.schedule-head{display:grid;gap:4px}
+.schedule-title{display:block;font-weight:800;font-size:1.02rem;line-height:1.35;color:var(--ink);text-decoration:none}
+a.schedule-title::after{content:" →";color:var(--blue);font-weight:700}
+a.schedule-title:hover{color:var(--blue)}
+.schedule-speaker{display:grid;gap:1px;line-height:1.3}
+.schedule-speaker strong{font-size:.9rem;color:var(--blue)}
+.schedule-speaker small{font-size:.76rem;color:var(--muted)}
+.schedule-meta{display:block;margin-top:4px;color:var(--muted);font-size:.82rem}
+.schedule-talks{list-style:none;display:grid;gap:6px;margin:10px 0 0;padding:0}
+.schedule-talk{display:grid;gap:6px;padding:10px 12px;border-radius:10px;background:var(--paper-2);color:inherit;text-decoration:none;border-left:3px solid var(--sky);transition:background-color .2s,transform .15s}
+a.schedule-talk:hover{background:var(--sky-soft)}
+a.schedule-talk:active{transform:scale(.99)}
+.schedule-talk-text{display:grid;gap:2px}
+.schedule-talk-text small{font-family:var(--display);font-size:.7rem;letter-spacing:.05em;color:var(--blue)}
+.schedule-talk-text span{font-weight:700;font-size:.88rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+/* 강연·팀빌딩은 강조, 등록·사진·식사·휴식은 옅게 */
+.schedule-row.is-feature{background:var(--sky-soft)}
+.schedule-row.is-feature .schedule-mark{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+.schedule-row.is-quiet .schedule-title{font-weight:600;color:var(--muted)}
+.schedule-row.is-quiet a.schedule-title{color:var(--ink)}
+.schedule-row.is-quiet .schedule-mark{border-style:dashed;color:var(--muted)}
+.schedule-row.type-lunch .schedule-mark,.schedule-row.type-coffee .schedule-mark{color:var(--blue)}
+/* 당일 진행 상태 */
+.schedule-row.is-past{opacity:.45}
+.schedule-row.is-next{box-shadow:inset 4px 0 0 var(--blue);background:var(--paper-2)}
+.schedule-row.is-now{background:var(--blue);color:var(--paper)}
+.schedule-row.is-now::before{background:var(--paper)}
+.schedule-row.is-now .schedule-time b,.schedule-row.is-now .schedule-time small,.schedule-row.is-now .schedule-title,.schedule-row.is-now .schedule-speaker strong,.schedule-row.is-now .schedule-speaker small,.schedule-row.is-now .schedule-meta,.schedule-row.is-now a.schedule-title::after{color:var(--paper)}
+.schedule-row.is-now .schedule-mark{background:var(--paper);border-color:var(--paper);color:var(--blue);animation:pulse-blue 1.8s ease-out infinite}
+.schedule-row.is-now .schedule-talk{background:rgba(255,255,255,.12);border-left-color:var(--paper)}
+.schedule-row.is-now .schedule-talk-text small{color:var(--sky-soft)}
+.schedule-row.is-now .schedule-time::before{content:none}
+@keyframes pulse-blue{0%{box-shadow:0 0 0 0 rgba(238,226,223,.75)}100%{box-shadow:0 0 0 12px rgba(238,226,223,0)}}
+@media (min-width:700px){
+  .schedule-list{--tc:6.2rem;--mk:46px;--gap:18px;--pad:14px}
+  .schedule-time b{font-size:1.3rem}
+  .schedule-head{grid-template-columns:minmax(0,1fr) minmax(170px,36%);align-items:start;gap:16px}
+  .schedule-speaker{text-align:right}
+  .schedule-talk{grid-template-columns:minmax(0,1fr) minmax(150px,34%);align-items:center}
+  .schedule-talk .schedule-speaker{text-align:right}
+}
+
+/* 발표 메모 */
+.memo{display:grid;gap:6px;margin-top:20px}
+.memo-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.memo-head b{font-family:var(--display);font-weight:400;font-size:.78rem;letter-spacing:.08em;color:var(--blue)}
+.memo-head small{font-size:.72rem;color:var(--muted)}
+.memo textarea{width:100%;min-height:76px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);font:inherit;font-size:.9rem;line-height:1.6;resize:vertical}
+.memo textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--sky-soft)}
+/* 연구실 기관별 소제목 */
+.simple-list .simple-group{padding:16px 4px 6px;border-bottom:2px solid var(--blue);font-family:var(--display);color:var(--blue);font-size:.8rem;letter-spacing:.06em}
+.simple-list .simple-group:first-child{padding-top:2px}

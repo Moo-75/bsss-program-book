@@ -85,7 +85,7 @@
       const summary = node('summary');
       summary.append(highlighted('span', 'entry-no', entryNumber(item, index), term));
       const label = node('span');
-      label.append(node('span', 'entry-kind', KINDS[kind].label));
+      label.append(node('span', 'entry-kind', item.lang ? `${KINDS[kind].label} · IN ${String(item.lang).toUpperCase()}` : KINDS[kind].label));
       label.append(highlighted('span', 'entry-title', item.title || '발표 제목 준비 중', term));
       label.append(highlighted('span', 'entry-meta', join(item.speaker, item.affiliation, item.time) || '발표자 정보 준비 중', term));
       const plus = node('span', 'plus'); plus.setAttribute('aria-hidden', 'true');
@@ -115,6 +115,7 @@
         where.addEventListener('click', () => locateBoard(entryNumber(item, index)));
         body.append(where);
       }
+      body.append(memo(detail.id));
       const share = node('button', 'share', '이 발표 링크 공유');
       share.type = 'button';
       share.addEventListener('click', () => shareLink(detail.id, item.title));
@@ -237,6 +238,30 @@
     setTimeout(() => board.classList.remove('is-located'), 3200);
   }
 
+  // 발표별 메모 (종이 프로그램북의 Note 페이지 대신). 이 기기의 브라우저에만 저장된다
+  function memo(id) {
+    const key = `bsss15-note-${id}`;
+    const box = node('label', 'memo');
+    const head = node('span', 'memo-head');
+    head.append(node('b', '', 'MY NOTE'), node('small', 'memo-state', '이 기기에만 저장됩니다'));
+    const area = node('textarea');
+    area.rows = 3;
+    area.placeholder = '발표를 들으며 메모하거나 질문을 적어 두세요';
+    try { area.value = localStorage.getItem(key) || ''; } catch (error) { /* 저장소를 쓸 수 없으면 빈 메모 */ }
+    let timer;
+    area.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        try {
+          if (area.value.trim()) localStorage.setItem(key, area.value); else localStorage.removeItem(key);
+          head.querySelector('.memo-state').textContent = '저장됨 ✓';
+        } catch (error) { head.querySelector('.memo-state').textContent = '이 브라우저에서는 저장할 수 없습니다'; }
+      }, 400);
+    });
+    box.append(head, area);
+    return box;
+  }
+
   function renderSimple(targetId, entries, emptyText, emptyTitle) {
     const target = $(targetId);
     if (!entries.length) {
@@ -244,7 +269,13 @@
       return;
     }
     const ul = node('ul', 'simple-list');
+    let group;
     entries.forEach(item => {
+      // group이 있으면 소속 기관별로 묶어 소제목을 단다 (In DGIST / In KBRI)
+      if (item.group && item.group !== group) {
+        group = item.group;
+        ul.append(node('li', 'simple-group', group));
+      }
       const li = node('li');
       li.append(node('strong', '', item.name || ''));
       if (item.detail) li.append(node('span', '', item.detail));
@@ -290,6 +321,44 @@
   const localDate = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   const duration = minutes => minutes >= 60 ? `${Math.floor(minutes / 60)}시간 ${minutes % 60}분` : `${minutes}분`;
 
+  // 시간표 아이콘 (선 아이콘, currentColor)
+  const ICON_PATHS = {
+    registration: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M9 6V4h6v2"/><circle cx="8.5" cy="12" r="2"/><path d="M5.5 17c.6-1.8 1.7-2.6 3-2.6s2.4.8 3 2.6M14 11h4M14 14.5h4"/>',
+    opening: '<path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/>',
+    closing: '<path d="M5 21V4"/><path d="M5 4h12l-2.5 4L17 12H5"/>',
+    keynote: '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',
+    oral: '<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
+    rewarded: '<circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.5 7 21l5-2.5 5 2.5-1.5-7.5"/><path d="m12 6.5.9 1.8 2 .3-1.45 1.4.35 2-1.8-.95-1.8.95.35-2L9.1 8.6l2-.3z"/>',
+    photo: '<path d="M4 8h3l1.5-2.5h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+    lunch: '<path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 1.5-3 4-3 7h3v11"/>',
+    poster: '<rect x="4" y="3" width="16" height="13" rx="1.5"/><path d="M8 21l4-5 4 5M8 8h8M8 11h5"/>',
+    coffee: '<path d="M4 10h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17M8 3c-.8 1 .8 2 0 3.5M12 3c-.8 1 .8 2 0 3.5"/>',
+    flash: '<path d="M13 2 5 13.5h6L10 22l8-12h-6z"/>',
+    award: '<path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.6 4M17 6h2.5a2.5 2.5 0 0 1-2.6 4M12 14v4M8 21h8M9.5 18h5"/>',
+    social: '<circle cx="12" cy="7.5" r="2.5"/><circle cx="5.5" cy="9.5" r="2"/><circle cx="18.5" cy="9.5" r="2"/><path d="M7.5 19c0-3 2-5 4.5-5s4.5 2 4.5 5M2.5 18c0-2.3 1.3-4 3-4M21.5 18c0-2.3-1.3-4-3-4"/>',
+    break: '<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>'
+  };
+  ICON_PATHS.awards = ICON_PATHS.award;
+  ICON_PATHS.posters = ICON_PATHS.poster;
+  function icon(type) {
+    const paths = ICON_PATHS[type];
+    if (!paths) return null;
+    const box = node('span', 'schedule-icon');
+    box.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+    return box;
+  }
+  // 쉬는 시간 성격의 순서는 옅게, 강연은 강조색으로 보여 준다
+  const QUIET = ['registration', 'photo', 'lunch', 'coffee', 'break'];
+  const FEATURE = ['keynote', 'social'];
+
+  function speakerBlock(item) {
+    if (!item.speaker && !item.affiliation) return null;
+    const box = node('span', 'schedule-speaker');
+    if (item.speaker) box.append(node('strong', '', item.speaker));
+    if (item.affiliation) box.append(node('small', '', item.affiliation));
+    return box;
+  }
+
   function renderSchedule() {
     const entries = list('schedule');
     const target = $('schedule-content');
@@ -297,25 +366,52 @@
       target.replaceChildren(empty('시간표를 준비하고 있습니다', '확정된 일정과 발표 순서가 이곳에 안내됩니다.'));
       return;
     }
-    const root = node('div', 'schedule-list');
+    const root = node('ol', 'schedule-list');
     entries.forEach((item, i) => {
-      const row = node('div', 'schedule-row');
+      const type = item.type || '';
+      const row = node('li', `schedule-row type-${type}${QUIET.includes(type) ? ' is-quiet' : ''}${FEATURE.includes(type) ? ' is-feature' : ''}`);
       row.id = `schedule-row-${i}`;
       const [start, end] = String(item.time || '').split(/\s*[–—~-]\s*/);
-      const time = node('span', 'schedule-time', start || '미정');
-      if (end) time.append(node('small', '', `– ${end}`));
-      const info = node('div');
-      const chipText = CHIP[item.type];
-      if (chipText) info.append(node('span', 'chip', chipText));
-      info.append(node('span', 'schedule-title', item.title || '프로그램 미정'));
-      const meta = join(item.speaker, item.location);
-      if (meta) info.append(node('span', 'schedule-meta', meta));
-      if (item.ref) {
-        const a = node('a', 'schedule-link', '자세히 보기 →');
+      const time = node('span', 'schedule-time');
+      time.append(node('b', '', start || '미정'));
+      if (end) time.append(node('small', '', end));
+      const mark = node('span', 'schedule-mark');
+      const glyph = icon(type);
+      if (glyph) mark.append(glyph);
+
+      const info = node('div', 'schedule-info');
+      const head = node('div', 'schedule-head');
+      const titleText = item.title || '프로그램 미정';
+      if (item.ref && !item.talks) {
+        const a = node('a', 'schedule-title', titleText);
         a.href = `#${item.ref}`;
-        info.append(a);
+        head.append(a);
+      } else {
+        head.append(node('span', 'schedule-title', titleText));
       }
-      row.append(time, info);
+      const speaker = speakerBlock(item);
+      if (speaker) head.append(speaker);
+      info.append(head);
+      if (item.location) info.append(node('span', 'schedule-meta', item.location));
+
+      // 한 시간대에 여러 발표가 이어지는 경우 (Student Oral 1~3 등)
+      if (Array.isArray(item.talks) && item.talks.length) {
+        const talks = node('ol', 'schedule-talks');
+        item.talks.forEach(talk => {
+          const li = node('li');
+          const link = node(talk.ref ? 'a' : 'div', 'schedule-talk');
+          if (talk.ref) link.href = `#${talk.ref}`;
+          const text = node('span', 'schedule-talk-text');
+          text.append(node('small', '', talk.label || ''), node('span', '', talk.title || '발표 제목 준비 중'));
+          link.append(text);
+          const who = speakerBlock(talk);
+          if (who) link.append(who);
+          li.append(link);
+          talks.append(li);
+        });
+        info.append(talks);
+      }
+      row.append(time, mark, info);
       root.append(row);
     });
     target.replaceChildren(root);
@@ -633,6 +729,7 @@
     renderSimple('awards-content', list('awards'), '시상 부문과 진행 순서가 확정되면 이곳에 안내합니다.', '시상 안내를 준비하고 있습니다');
     renderSimple('laboratories-content', list('laboratories'), '참여 연구실 정보를 준비하고 있습니다.');
     renderSimple('committee-content', list('committee'), '운영위원회 정보를 준비하고 있습니다.');
+    renderSimple('prizes-content', list('prizes'), '경품과 이벤트가 정해지면 이곳에 안내합니다.');
     $('poster-search').addEventListener('input', renderPosters);
     $('clear-search').addEventListener('click', () => { $('poster-search').value = ''; renderPosters(); $('poster-search').focus(); });
     $('saved-only').addEventListener('click', () => { savedOnly = !savedOnly; renderPosters(); });
