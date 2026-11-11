@@ -321,15 +321,6 @@ mark{background:var(--sky-soft);color:inherit;border-radius:3px;padding:0 1px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
 @media print{.band,.tabs,.search,.share,.toast,.fab{display:none!important}body{padding:0}details>*{display:block}}
 
-/* 캘린더 추가 */
-.cal-links{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
-.cal-links[hidden]{display:none}
-.cal-links a{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:0 15px;border:2px solid var(--blue);border-radius:999px;color:var(--blue);text-decoration:none;font-weight:700;font-size:.82rem;transition:background-color .2s,color .2s,transform .15s}
-.cal-links a:first-child{background:var(--blue);color:var(--paper)}
-.cal-links a:first-child::before{content:"";width:13px;height:13px;border:2px solid currentColor;border-top-width:4px;border-radius:3px}
-.cal-links a:hover{background:var(--blue-deep);border-color:var(--blue-deep);color:var(--paper)}
-.cal-links a:active{transform:scale(.96)}
-
 /* 섹션 번호에 포스터의 고리+원 모티프: 등장할 때 작은 원이 튀어 들어온다 */
 .section-no{position:relative}
 .section-no::after{content:"";position:absolute;right:-.5rem;top:-.35rem;width:.85rem;height:.85rem;border-radius:50%;background:var(--sky);transition:transform .5s .35s cubic-bezier(.3,1.6,.5,1)}
@@ -341,3 +332,32 @@ mark{background:var(--sky-soft);color:inherit;border-radius:3px;padding:0 1px}
   .hero-art{width:min(82%,460px);margin-top:-10px}
   .hero-intro{margin-top:20px;padding-top:14px}
 }
+
+/* 포스터 배치도 */
+.poster-map{margin:0 0 18px;border:2px solid var(--blue);border-radius:16px;background:var(--paper-2)}
+.poster-map>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:54px;padding:10px 16px;font-weight:700}
+.poster-map>summary::-webkit-details-marker{display:none}
+.poster-map>summary small{margin-left:6px;font-family:var(--display);font-weight:400;font-size:.72rem;color:var(--blue);letter-spacing:.05em}
+.map-body{display:grid;gap:14px;padding:0 14px 16px}
+.map-flag{margin:0;padding:8px 12px;border-radius:10px;background:var(--sky-soft);font-size:.82rem;color:var(--ink)}
+.map-flag b{margin-right:4px;font-family:var(--display);font-weight:400;color:var(--blue);letter-spacing:.04em}
+.map-area{position:relative;min-width:0;padding:26px 12px 14px;border:2px dashed var(--line);border-radius:14px;background:var(--paper)}
+.map-area.entrance-bottom{padding-bottom:34px}
+.map-label{position:absolute;left:12px;top:6px;font-size:.72rem;font-weight:700;color:var(--muted)}
+.map-rows{min-width:0;display:grid;gap:12px;overflow-x:auto;scrollbar-width:thin;padding:4px 2px}
+.map-row{display:flex;gap:5px;width:max-content;margin:0 auto}
+.board{display:grid;place-items:center;width:clamp(36px,10.5vw,48px);height:34px;border:2px solid var(--blue);border-radius:7px;background:var(--paper-2);color:var(--blue);font-family:var(--display);font-size:.78rem;text-decoration:none;transition:background-color .25s,color .25s,opacity .25s,transform .2s}
+a.board:hover{transform:translateY(-2px)}
+.board.is-empty{border-style:dashed;opacity:.45}
+.board.is-saved{background:var(--sky);color:var(--ink)}
+.board.is-match{background:var(--blue);color:var(--paper)}
+.board.is-dim{opacity:.25}
+.board.is-located{position:relative;z-index:1;background:var(--blue);color:var(--paper);opacity:1;animation:locate 1s ease-out 3}
+@keyframes locate{0%{box-shadow:0 0 0 0 rgba(14,90,170,.55);transform:scale(1.15)}100%{box-shadow:0 0 0 14px rgba(14,90,170,0);transform:scale(1)}}
+.map-entrance{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);padding:1px 12px;border-radius:999px;background:var(--blue);color:var(--paper);font-family:var(--display);font-size:.66rem;letter-spacing:.06em;white-space:nowrap}
+.map-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0;font-size:.76rem;color:var(--muted)}
+.map-legend span{display:inline-flex;align-items:center;gap:6px}
+.map-legend span::before{content:"";width:14px;height:11px;border:2px solid var(--blue);border-radius:3px}
+.map-legend .is-saved::before{background:var(--sky)}
+.map-legend .is-match::before{background:var(--blue)}
+.share-map{margin-right:8px;background:var(--blue);color:var(--paper)}

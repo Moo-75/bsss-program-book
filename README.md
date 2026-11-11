@@ -33,6 +33,8 @@ window.SYMPOSIUM = {
   keynote:  [{ number: "01", title: "강연 제목", speaker: "연사", affiliation: "소속", time: "10:00", photo: "./assets/speakers/이름.jpg", bio: "소개", abstract: "초록", publications: ["논문 정보"] }],
   oral:     [{ number: "01", title: "발표 제목", speaker: "발표자", affiliation: "소속", time: "10:50", abstract: "초록" }],
   posters:  [{ number: "P01", title: "포스터 제목", speaker: "발표자", affiliation: "소속", abstract: "초록" }],
+  // 포스터 배치도(선택). 구역마다 rows에 실제 게시판 줄 순서대로 번호를 적는다. entrance: "bottom" 이면 아래쪽에 입구 표시
+  posterMap: { note: "안내 문구(선택)", areas: [{ name: "E7 로비 A", rows: [["P01", "P02", "P03"], ["P04", "P05", "P06"]], entrance: "bottom" }] },
   flash:    [{ number: "01", title: "발표 제목", speaker: "발표자", affiliation: "소속" }],
   rewarded: [{ number: "01", title: "발표 제목", speaker: "발표자", affiliation: "소속", abstract: "초록" }],
   awards:   [{ name: "시상 부문", detail: "설명" }],
@@ -60,6 +62,7 @@ window.SYMPOSIUM = {
 - **홈 화면 추가**: `manifest.webmanifest`와 `assets/icon-*.png`.
 - **예시 데이터 미리보기**: 주소 뒤에 `?demo=1`을 붙이면 `data-demo.js`의 가짜 데이터로 모든 기능을 볼 수 있습니다. 예: `?demo=1&now=2027-01-21T11:10`. 실제 방문자에게는 보이지 않습니다.
 - **D-day**: 행사 전에는 첫 화면에 D-n, 당일에는 TODAY가 표시됩니다.
+- **포스터 배치도**: POSTER 섹션 맨 위. `posterMap`이 없으면 "임시 배치도"로 표시됩니다(포스터가 있으면 번호 순서로 6개씩, 없으면 P01–P24 예시 자리). 자리를 누르면 그 포스터 초록이 열리고, 초록의 "배치도에서 위치 보기"를 누르면 배치도의 자리가 깜빡입니다. 검색 결과와 저장한 포스터도 배치도에 색으로 표시됩니다.
 
 ## 에셋
 

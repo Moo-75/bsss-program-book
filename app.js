@@ -47,6 +47,8 @@
     button.setAttribute('aria-pressed', String(on));
     toast(on ? '저장했습니다 · MENU에서 모아 볼 수 있어요' : '저장을 해제했습니다');
     updateSavedButton();
+    const board = id.startsWith('poster-') && $(boardId(id.slice(7)));
+    if (board) board.classList.toggle('is-saved', on);
     if (savedOnly) renderPosters();
   }
   function updateSavedButton() {
@@ -107,6 +109,12 @@
         item.publications.forEach(p => ol.append(node('li', '', p)));
         body.append(ol);
       }
+      if (kind === 'posters') {
+        const where = node('button', 'share share-map', '배치도에서 위치 보기');
+        where.type = 'button';
+        where.addEventListener('click', () => locateBoard(entryNumber(item, index)));
+        body.append(where);
+      }
       const share = node('button', 'share', '이 발표 링크 공유');
       share.type = 'button';
       share.addEventListener('click', () => shareLink(detail.id, item.title));
@@ -147,6 +155,7 @@
     const filtered = all.filter(({ item, index }) => (!savedOnly || saved.has(entryId('posters', item, index))) &&
       [entryNumber(item, index), item.title, item.speaker, item.affiliation]
         .some(value => String(value || '').toLocaleLowerCase().includes(term)));
+    updateMap(term || savedOnly ? new Set(filtered.map(({ item, index }) => entryNumber(item, index))) : null);
     $('poster-count').textContent = term || savedOnly ? `${filtered.length} / ${all.length} POSTERS` : `${all.length} POSTERS`;
     if (!filtered.length) {
       $('posters-content').replaceChildren(savedOnly && !term
@@ -155,6 +164,77 @@
       return;
     }
     renderEntries('posters', filtered, term);
+  }
+
+  // 포스터 배치도: data.js의 posterMap을 그린다. 없으면 포스터 번호(또는 예시 번호)로 임시 배치도를 만든다
+  const boardId = number => `map-${String(number).replace(/[^\w-]/g, '')}`;
+  function renderPosterMap() {
+    const body = $('poster-map-body');
+    const posters = list('posters');
+    const numbers = posters.map((item, index) => entryNumber(item, index));
+    const config = data.posterMap && Array.isArray(data.posterMap.areas) ? data.posterMap : null;
+    const chunk = (items, size) => Array.from({ length: Math.ceil(items.length / size) }, (_, i) => items.slice(i * size, i * size + size));
+    const placeholder = Array.from({ length: 24 }, (_, i) => `P${String(i + 1).padStart(2, '0')}`);
+    const areas = config ? config.areas : [{ name: event.venue ? `${event.venue} 포스터 구역` : '포스터 구역', rows: chunk(numbers.length ? numbers : placeholder, 6), entrance: 'bottom' }];
+    const nodes = [];
+    if (!config) {
+      const flag = node('p', 'map-flag');
+      flag.append(node('b', '', '임시 배치도'), document.createTextNode(numbers.length ? ' 번호 순서로 그린 예시입니다. 실제 위치는 확정 후 안내됩니다.' : ' 포스터 목록과 위치가 확정되면 실제 배치로 바뀝니다.'));
+      nodes.push(flag);
+    } else if (config.note) {
+      nodes.push(node('p', 'map-flag', config.note));
+    }
+    areas.forEach(area => {
+      const box = node('div', `map-area${area.entrance ? ` entrance-${area.entrance}` : ''}`);
+      box.append(node('span', 'map-label', area.name || ''));
+      const rows = node('div', 'map-rows');
+      (area.rows || []).forEach(row => {
+        const line = node('div', 'map-row');
+        row.forEach(number => {
+          const exists = numbers.includes(String(number));
+          const board = node(exists ? 'a' : 'span', `board${exists ? '' : ' is-empty'}`, number);
+          board.id = boardId(number);
+          board.dataset.number = number;
+          if (exists) {
+            const index = numbers.indexOf(String(number));
+            board.href = `#${entryId('posters', posters[index], index)}`;
+            board.setAttribute('aria-label', `${number} ${posters[index].title || ''}`);
+            board.addEventListener('click', e => { if (location.hash === board.hash) { e.preventDefault(); openFromHash(); } });
+          }
+          line.append(board);
+        });
+        rows.append(line);
+      });
+      box.append(rows);
+      if (area.entrance) box.append(node('span', 'map-entrance', 'ENTRANCE 입구'));
+      nodes.push(box);
+    });
+    const legend = node('p', 'map-legend');
+    legend.append(node('span', 'is-saved', '저장한 포스터'), node('span', 'is-match', '검색 결과'));
+    nodes.push(legend);
+    body.replaceChildren(...nodes);
+  }
+
+  function updateMap(matches) {
+    document.querySelectorAll('.board').forEach(board => {
+      const number = board.dataset.number;
+      const index = list('posters').findIndex((item, i) => entryNumber(item, i) === number);
+      board.classList.toggle('is-saved', index !== -1 && saved.has(entryId('posters', list('posters')[index], index)));
+      board.classList.toggle('is-match', !!matches && matches.has(number));
+      board.classList.toggle('is-dim', !!matches && !matches.has(number));
+    });
+  }
+
+  // 포스터 초록에서 "배치도에서 위치 보기"를 누르면 배치도의 해당 자리를 깜빡여 보여 준다
+  function locateBoard(number) {
+    const board = $(boardId(number));
+    if (!board) { toast('배치도에 아직 위치가 없습니다'); return; }
+    $('poster-map').open = true;
+    board.scrollIntoView({ block: 'center', behavior: reducedMotion() ? 'auto' : 'smooth' });
+    board.classList.remove('is-located');
+    void board.offsetWidth;
+    board.classList.add('is-located');
+    setTimeout(() => board.classList.remove('is-located'), 3200);
   }
 
   function renderSimple(targetId, entries, emptyText, emptyTitle) {
@@ -322,40 +402,6 @@
         $('dday').querySelector('dd').textContent = days === 0 ? 'TODAY' : `D-${days}`;
       }
     }
-  }
-
-  // 캘린더에 추가: 휴대폰 기본 캘린더용 .ics 파일과 구글 캘린더 링크.
-  // 시간표가 있으면 첫 순서 시작~마지막 순서 끝, 없으면 하루 종일 일정으로 넣는다
-  function calendarLinks() {
-    const box = $('cal-links');
-    if (!event.date || !/^\d{4}-\d{2}-\d{2}$/.test(event.date)) { box.hidden = true; return; }
-    const day = event.date.replace(/-/g, '');
-    const times = scheduleTimes(list('schedule')).filter(t => t.start != null);
-    const hhmm = m => `${String(Math.floor(m / 60)).padStart(2, '0')}${String(m % 60).padStart(2, '0')}00`;
-    let start, end, allDay = !times.length;
-    if (allDay) {
-      const next = new Date(`${event.date}T00:00`); next.setDate(next.getDate() + 1);
-      start = day; end = localDate(next).replace(/-/g, '');
-    } else {
-      start = `${day}T${hhmm(times[0].start)}`;
-      end = `${day}T${hhmm(Math.max(...times.map(t => t.end ?? t.start)))}`;
-    }
-    const title = '15th DGIST Brain Sciences Student Symposium';
-    const url = `${location.origin}${location.pathname}`;
-    const venue = event.venue || 'DGIST';
-    const esc = text => String(text).replace(/[\\,;]/g, m => `\\${m}`).replace(/\n/g, '\\n');
-    const value = allDay ? ';VALUE=DATE' : ';TZID=Asia/Seoul';
-    const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//BSSS//Program Book//KO', 'BEGIN:VEVENT',
-      `UID:bsss15-${day}@moo-75.github.io`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`,
-      `DTSTART${value}:${start}`, `DTEND${value}:${end}`, `SUMMARY:${esc(title)}`, `LOCATION:${esc(venue)}`,
-      `DESCRIPTION:${esc(`프로그램북: ${url}`)}`, `URL:${url}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
-    const file = node('a', '', '캘린더에 추가');
-    file.href = `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
-    file.download = 'bsss-15th.ics';
-    const google = node('a', '', '구글 캘린더');
-    google.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}${allDay ? '' : '&ctz=Asia/Seoul'}&location=${encodeURIComponent(venue)}&details=${encodeURIComponent(url)}`;
-    google.target = '_blank'; google.rel = 'noopener';
-    box.replaceChildren(file, google);
   }
 
   // 공유 링크: 지원되면 기기 공유 창, 아니면 주소 복사
@@ -576,7 +622,6 @@
     event = data.event || {};
     if (params.has('demo')) document.body.prepend(node('div', 'demo-flag', '예시 데이터 미리보기 · 실제 프로그램이 아닙니다'));
     fillEvent();
-    calendarLinks();
     setupMenu();
     renderNotices();
     renderSchedule();
@@ -590,6 +635,7 @@
     $('poster-search').addEventListener('input', renderPosters);
     $('clear-search').addEventListener('click', () => { $('poster-search').value = ''; renderPosters(); $('poster-search').focus(); });
     $('saved-only').addEventListener('click', () => { savedOnly = !savedOnly; renderPosters(); });
+    renderPosterMap();
     renderPosters();
     watchSections();
     setupMotion();

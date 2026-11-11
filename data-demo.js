@@ -22,6 +22,13 @@
     keynote: [{ number: '01', title: '예시 기조강연 제목', speaker: '예시 연사', affiliation: '예시 대학교', time: '10:00', bio: '예시 연사 소개 문장입니다.', abstract, publications: ['예시 논문 정보 1', '예시 논문 정보 2'] }],
     oral: talks(4, '구두발표', ['10:50', '11:05', '11:20', '11:35']),
     posters: talks(24, '포스터').map((p, i) => ({ ...p, number: `P${String(i + 1).padStart(2, '0')}` })),
+    posterMap: {
+      note: '예시 배치도입니다. 실제 행사장 배치가 아닙니다.',
+      areas: [
+        { name: 'E7 로비 A', rows: [['P01', 'P02', 'P03', 'P04', 'P05', 'P06'], ['P07', 'P08', 'P09', 'P10', 'P11', 'P12']], entrance: 'bottom' },
+        { name: 'E7 로비 B', rows: [['P13', 'P14', 'P15', 'P16', 'P17', 'P18'], ['P19', 'P20', 'P21', 'P22', 'P23', 'P24']] }
+      ]
+    },
     flash: talks(5, '플래시 토크'),
     rewarded: talks(2, 'Rewarded Talk', ['15:10', '15:35']),
     awards: [{ name: '예시 시상 부문 1', detail: '예시 설명' }, { name: '예시 시상 부문 2', detail: '예시 설명' }],

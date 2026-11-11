@@ -66,7 +66,6 @@
           <div><dt>VENUE</dt><dd data-event="venue">DGIST E7, L29</dd></div>
           <div id="dday" class="dday" hidden><dt class="sr-only">행사까지</dt><dd></dd></div>
         </dl>
-        <p class="cal-links" id="cal-links"></p>
       </div>
     </section>
 
@@ -111,6 +110,10 @@
     <section class="section" id="posters" aria-labelledby="posters-title">
       <div class="section-head"><span class="section-no">04</span><h2 id="posters-title">POSTER SESSION <span>포스터 세션</span></h2></div>
       <p class="section-desc">포스터 번호, 발표자, 제목, 소속으로 찾아보세요.</p>
+      <details class="poster-map" id="poster-map" open>
+        <summary><span>포스터 배치도 <small>POSTER MAP</small></span><span class="plus" aria-hidden="true"></span></summary>
+        <div class="map-body" id="poster-map-body"></div>
+      </details>
       <div class="search" id="poster-search-wrap" hidden>
         <label class="sr-only" for="poster-search">포스터 검색</label>
         <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
