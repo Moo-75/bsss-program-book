@@ -270,7 +270,10 @@ mark{background:var(--sky-soft);color:inherit;border-radius:3px;padding:0 1px}
 .hero-logo{animation:fade .6s .2s ease-out both}
 .hero-art{animation:pop .8s .15s cubic-bezier(.2,.8,.2,1) both}
 /* 일러스트 부품마다 방향·크기·주기가 다른 움직임. 주기가 서로 나눠떨어지지 않아 같은 모양이 잘 반복되지 않는다 */
-@keyframes drift{50%{transform:translate(var(--dx,0),var(--dy,-8px)) rotate(var(--r,0deg)) scale(var(--s,1))}}
+@keyframes drift{50%{transform:translate(calc(var(--dx,0%) * var(--k)),calc(var(--dy,0%) * var(--k))) rotate(calc(var(--r,0deg) * var(--k))) scale(calc(1 + (var(--s,1) - 1) * var(--k)))}}
+/* 화면이 작으면 같은 움직임도 잘 안 보여서 폭을 키운다 */
+.hero-art{--k:1}
+@media (max-width:699px){.hero-art{--k:2}}
 .hero-art img{animation:drift var(--t,7s) var(--d,0s) ease-in-out infinite;will-change:transform}
 .art-brain{--dy:-1.1%;--r:-.8deg;--t:8.3s;--d:-1s;transform-origin:50% 60%}
 .art-neuron{--dx:.6%;--dy:-1.4%;--r:3deg;--t:6.7s;--d:-3s;transform-origin:50% 55%}
