@@ -40,7 +40,8 @@ button,input{font:inherit;color:inherit}
 .hero-foot{grid-area:foot;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
 .hero-logo{grid-area:logo;justify-self:end;width:clamp(92px,24vw,210px)}
 .hero-art{grid-area:art;justify-self:center;width:min(100%,560px);margin:-4px 0 -6px}
-.hero-art img{width:100%}
+.hero-art{position:relative;aspect-ratio:1100/1473}
+.hero-art img{position:absolute;height:auto}
 .hero-venue{margin:0;font-size:clamp(1.9rem,9vw,4.4rem);line-height:.98;color:transparent;-webkit-text-stroke:1.6px var(--blue);padding-bottom:6px;border-bottom:3px solid var(--blue);justify-self:start}
 .hero-date{margin:0;text-align:right;color:var(--blue);font-size:clamp(2.7rem,14vw,7.6rem);line-height:.9;white-space:nowrap}
 .hero-date .dash{display:inline-block;width:.85em;height:.07em;background:currentColor;vertical-align:.3em;margin-right:.18em}
@@ -268,7 +269,17 @@ mark{background:var(--sky-soft);color:inherit;border-radius:3px;padding:0 1px}
 .band img{animation:fade .6s ease-out both}
 .hero-logo{animation:fade .6s .2s ease-out both}
 .hero-art{animation:pop .8s .15s cubic-bezier(.2,.8,.2,1) both}
-.hero-art img{animation:float 7s 1s ease-in-out infinite;will-change:transform}
+/* 일러스트 부품마다 방향·크기·주기가 다른 움직임. 주기가 서로 나눠떨어지지 않아 같은 모양이 잘 반복되지 않는다 */
+@keyframes drift{50%{transform:translate(var(--dx,0),var(--dy,-8px)) rotate(var(--r,0deg)) scale(var(--s,1))}}
+.hero-art img{animation:drift var(--t,7s) var(--d,0s) ease-in-out infinite;will-change:transform}
+.art-brain{--dy:-1.1%;--r:-.8deg;--t:8.3s;--d:-1s;transform-origin:50% 60%}
+.art-neuron{--dx:.6%;--dy:-1.4%;--r:3deg;--t:6.7s;--d:-3s;transform-origin:50% 55%}
+.art-halftone{--dy:.6%;--s:1.03;--t:10.1s;--d:-4s}
+.art-membrane{--dx:-.8%;--dy:-.9%;--r:-3.5deg;--t:7.4s;--d:-2s;transform-origin:45% 50%}
+.art-orbit{--dx:-1.6%;--dy:1%;--r:14deg;--t:9.2s;--d:-6s;transform-origin:35% 40%}
+.art-ring{--dx:1.4%;--dy:-1.3%;--r:-10deg;--s:1.05;--t:8.8s;--d:-5s}
+.art-dots{--dx:1%;--dy:1.6%;--r:6deg;--t:5.9s;--d:-1.5s}
+.art-circles{--dx:-1.2%;--dy:-1.5%;--s:1.06;--t:6.3s;--d:-3.7s}
 .hero-venue{animation:rise .6s .45s cubic-bezier(.2,.8,.2,1) both}
 .hero-date{animation:rise .6s .55s cubic-bezier(.2,.8,.2,1) both}
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease-out,transform .55s cubic-bezier(.2,.8,.2,1)}

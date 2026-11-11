@@ -63,7 +63,8 @@ window.SYMPOSIUM = {
 
 ## 에셋
 
-- `assets/poster-art.webp`, `bsss-band*.webp`, `dgist-logo.png`: 포스터 PDF에서 추출한 그래픽
+- `assets/art/*.webp`: 포스터 일러스트를 부품별(뇌, 뉴런, 망점 원, 막단백질, 고리, 점 등)로 나눈 레이어. 첫 화면에서 각자 조금씩 다르게 움직입니다. 위치는 `index.html`, 움직임은 `styles.css`의 `.art-*`에서 조정합니다.
+- `assets/bsss-band*.webp`, `dgist-logo.png`: 포스터 PDF에서 추출한 그래픽
 - `assets/BoonTook-Regular.woff`: 영문 표제 글꼴(SIL OFL, 라틴 문자만 남긴 subset). 한글은 Pretendard(jsDelivr CDN)로 표시됩니다.
 
 ## 배포 (확정)
