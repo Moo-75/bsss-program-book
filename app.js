@@ -362,14 +362,29 @@
     }
   }
 
-  // 현재 보고 있는 섹션의 탭 강조
+  // 현재 보고 있는 섹션의 탭 강조: 상단 탭 바로 아래에 걸친 섹션을 현재 섹션으로 본다.
+  // 바로가기를 누르면 이동이 끝날 때까지(사용자가 직접 스크롤하기 전까지) 누른 섹션을 유지한다.
   function watchSections() {
     const tabs = [...document.querySelectorAll('.tabs-inner a')];
     const byId = new Map(tabs.map(a => [a.getAttribute('href').slice(1), a]));
-    const visible = new Map();
-    const observer = new IntersectionObserver(items => {
-      items.forEach(item => visible.set(item.target.id, item.isIntersecting));
-      const active = [...byId.keys()].find(id => visible.get(id));
+    const sections = [...byId.keys()].map(id => $(id)).filter(Boolean);
+    const header = document.querySelector('.tabs');
+    let chosen = null;
+    let shown;
+
+    const pick = () => {
+      if (chosen) return chosen;
+      const line = header.getBoundingClientRect().bottom + 90;
+      let active = null;
+      sections.forEach(s => { if (s.getBoundingClientRect().top <= line) active = s.id; });
+      // 맨 아래까지 내려가 마지막 섹션이 위로 올라오지 못하는 경우
+      if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) active = sections[sections.length - 1].id;
+      return active;
+    };
+    const update = () => {
+      const active = pick();
+      if (active === shown) return;
+      shown = active;
       tabs.forEach(a => a.removeAttribute('aria-current'));
       document.querySelectorAll('.sheet-links a').forEach(a => {
         if (active && a.getAttribute('href') === `#${active}`) a.setAttribute('aria-current', 'true');
@@ -382,8 +397,24 @@
         const left = tab.offsetLeft - (bar.clientWidth - tab.offsetWidth) / 2;
         bar.scrollTo({ left, behavior: reducedMotion() ? 'auto' : 'smooth' });
       }
-    }, { rootMargin: '-35% 0px -60% 0px' });
-    byId.forEach((_, id) => { const s = $(id); if (s) observer.observe(s); });
+    };
+
+    document.querySelectorAll('.tabs-inner a, .sheet-links a, .hero-program a').forEach(a => a.addEventListener('click', () => {
+      const id = a.getAttribute('href').slice(1);
+      chosen = byId.has(id) ? id : null;
+      update();
+    }));
+    const release = () => { if (chosen) { chosen = null; update(); } };
+    ['wheel', 'touchstart', 'keydown'].forEach(type => addEventListener(type, release, { passive: true }));
+
+    let ticking = false;
+    addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { ticking = false; update(); });
+    }, { passive: true });
+    addEventListener('resize', update);
+    update();
   }
 
   // 첫 화면을 지나면 오른쪽 아래에 MENU·맨 위로 버튼을 띄운다
