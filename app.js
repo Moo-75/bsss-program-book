@@ -621,6 +621,7 @@
     data = window.SYMPOSIUM || {};
     event = data.event || {};
     if (params.has('demo')) document.body.prepend(node('div', 'demo-flag', '예시 데이터 미리보기 · 실제 프로그램이 아닙니다'));
+    else if (data.draft) document.body.prepend(node('div', 'demo-flag', data.draft));
     fillEvent();
     setupMenu();
     renderNotices();
