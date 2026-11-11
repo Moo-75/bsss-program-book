@@ -399,7 +399,7 @@
       }
     };
 
-    document.querySelectorAll('.tabs-inner a, .sheet-links a, .hero-program a').forEach(a => a.addEventListener('click', () => {
+    document.querySelectorAll('.tabs-inner a, .sheet-links a').forEach(a => a.addEventListener('click', () => {
       const id = a.getAttribute('href').slice(1);
       chosen = byId.has(id) ? id : null;
       update();
