@@ -320,3 +320,24 @@ mark{background:var(--sky-soft);color:inherit;border-radius:3px;padding:0 1px}
 
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
 @media print{.band,.tabs,.search,.share,.toast,.fab{display:none!important}body{padding:0}details>*{display:block}}
+
+/* 캘린더 추가 */
+.cal-links{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.cal-links[hidden]{display:none}
+.cal-links a{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:0 15px;border:2px solid var(--blue);border-radius:999px;color:var(--blue);text-decoration:none;font-weight:700;font-size:.82rem;transition:background-color .2s,color .2s,transform .15s}
+.cal-links a:first-child{background:var(--blue);color:var(--paper)}
+.cal-links a:first-child::before{content:"";width:13px;height:13px;border:2px solid currentColor;border-top-width:4px;border-radius:3px}
+.cal-links a:hover{background:var(--blue-deep);border-color:var(--blue-deep);color:var(--paper)}
+.cal-links a:active{transform:scale(.96)}
+
+/* 섹션 번호에 포스터의 고리+원 모티프: 등장할 때 작은 원이 튀어 들어온다 */
+.section-no{position:relative}
+.section-no::after{content:"";position:absolute;right:-.5rem;top:-.35rem;width:.85rem;height:.85rem;border-radius:50%;background:var(--sky);transition:transform .5s .35s cubic-bezier(.3,1.6,.5,1)}
+.section-head::after{content:"";flex:1;align-self:center;height:6px;margin-left:4px;background:radial-gradient(circle,var(--blue) 2.5px,transparent 3px) left center/14px 6px repeat-x;opacity:.35;max-width:120px}
+.reveal:not(.in) .section-no::after{transform:translate(10px,-10px) scale(0)}
+
+/* 휴대폰 첫 화면: 일러스트를 조금 줄여 날짜와 PROGRAM BOOK까지 한눈에 */
+@media (max-width:699px){
+  .hero-art{width:min(82%,460px);margin-top:-10px}
+  .hero-intro{margin-top:20px;padding-top:14px}
+}

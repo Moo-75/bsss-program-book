@@ -324,6 +324,40 @@
     }
   }
 
+  // 캘린더에 추가: 휴대폰 기본 캘린더용 .ics 파일과 구글 캘린더 링크.
+  // 시간표가 있으면 첫 순서 시작~마지막 순서 끝, 없으면 하루 종일 일정으로 넣는다
+  function calendarLinks() {
+    const box = $('cal-links');
+    if (!event.date || !/^\d{4}-\d{2}-\d{2}$/.test(event.date)) { box.hidden = true; return; }
+    const day = event.date.replace(/-/g, '');
+    const times = scheduleTimes(list('schedule')).filter(t => t.start != null);
+    const hhmm = m => `${String(Math.floor(m / 60)).padStart(2, '0')}${String(m % 60).padStart(2, '0')}00`;
+    let start, end, allDay = !times.length;
+    if (allDay) {
+      const next = new Date(`${event.date}T00:00`); next.setDate(next.getDate() + 1);
+      start = day; end = localDate(next).replace(/-/g, '');
+    } else {
+      start = `${day}T${hhmm(times[0].start)}`;
+      end = `${day}T${hhmm(Math.max(...times.map(t => t.end ?? t.start)))}`;
+    }
+    const title = '15th DGIST Brain Sciences Student Symposium';
+    const url = `${location.origin}${location.pathname}`;
+    const venue = event.venue || 'DGIST';
+    const esc = text => String(text).replace(/[\\,;]/g, m => `\\${m}`).replace(/\n/g, '\\n');
+    const value = allDay ? ';VALUE=DATE' : ';TZID=Asia/Seoul';
+    const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//BSSS//Program Book//KO', 'BEGIN:VEVENT',
+      `UID:bsss15-${day}@moo-75.github.io`, `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').slice(0, 15)}Z`,
+      `DTSTART${value}:${start}`, `DTEND${value}:${end}`, `SUMMARY:${esc(title)}`, `LOCATION:${esc(venue)}`,
+      `DESCRIPTION:${esc(`프로그램북: ${url}`)}`, `URL:${url}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+    const file = node('a', '', '캘린더에 추가');
+    file.href = `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
+    file.download = 'bsss-15th.ics';
+    const google = node('a', '', '구글 캘린더');
+    google.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}${allDay ? '' : '&ctz=Asia/Seoul'}&location=${encodeURIComponent(venue)}&details=${encodeURIComponent(url)}`;
+    google.target = '_blank'; google.rel = 'noopener';
+    box.replaceChildren(file, google);
+  }
+
   // 공유 링크: 지원되면 기기 공유 창, 아니면 주소 복사
   let toastTimer;
   function toast(message) {
@@ -542,6 +576,7 @@
     event = data.event || {};
     if (params.has('demo')) document.body.prepend(node('div', 'demo-flag', '예시 데이터 미리보기 · 실제 프로그램이 아닙니다'));
     fillEvent();
+    calendarLinks();
     setupMenu();
     renderNotices();
     renderSchedule();
