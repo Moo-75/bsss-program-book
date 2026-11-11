@@ -13,9 +13,14 @@
   <meta property="og:url" content="https://moo-75.github.io/bsss-program-book/">
   <meta property="og:image" content="https://moo-75.github.io/bsss-program-book/assets/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="./assets/bsss-band-vertical.webp">
+  <link rel="icon" href="./assets/icon-192.png">
+  <link rel="apple-touch-icon" href="./assets/icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
   <link rel="preload" href="./assets/BoonTook-Regular.woff" as="font" type="font/woff" crossorigin>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <!-- 한글 글꼴은 화면 표시를 막지 않게 뒤에서 불러온다 (CDN이 느려도 기기 글꼴로 바로 보인다) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
   <link rel="stylesheet" href="./styles.css">
   <script defer src="./data.js"></script>
   <script defer src="./app.js"></script>
@@ -61,6 +66,7 @@
         <dl class="hero-meta">
           <div><dt>DATE</dt><dd data-event="dateLabel">2027. 01. 21 (THU)</dd></div>
           <div><dt>VENUE</dt><dd data-event="venue">DGIST E7, L29</dd></div>
+          <div id="dday" class="dday" hidden><dt class="sr-only">행사까지</dt><dd></dd></div>
         </dl>
       </div>
     </section>
@@ -76,7 +82,13 @@
         <a href="#awards">AWARD</a>
         <a href="#information">INFO</a>
       </div>
+      <a id="live" class="live" href="#schedule" hidden>
+        <b>NOW</b><span class="live-title"></span><span class="live-left"></span><i class="live-bar" aria-hidden="true"></i>
+      </a>
+      <i class="progress" id="progress" aria-hidden="true"></i>
     </nav>
+
+    <div id="notices" class="notices" hidden aria-live="polite"></div>
 
     <section class="section" id="schedule" aria-labelledby="schedule-title">
       <div class="section-head"><span class="section-no">01</span><h2 id="schedule-title">SCHEDULE <span>시간표</span></h2></div>
@@ -106,7 +118,10 @@
         <input id="poster-search" type="search" placeholder="예: P12, 이름, 키워드" autocomplete="off" enterkeyhint="search">
         <button id="clear-search" type="button" hidden aria-label="검색어 지우기">×</button>
       </div>
-      <p id="poster-count" class="result-count" aria-live="polite"></p>
+      <div class="poster-tools">
+        <p id="poster-count" class="result-count" aria-live="polite"></p>
+        <button id="saved-only" class="saved-only" type="button" aria-pressed="false" hidden>★ 저장한 포스터 0</button>
+      </div>
       <div id="posters-content" class="content"></div>
     </section>
 
@@ -147,6 +162,17 @@
           <summary><span>운영위원회 <small>ORGANIZING COMMITTEE</small></span><span class="plus" aria-hidden="true"></span></summary>
           <div class="detail-body" id="committee-content"></div>
         </details>
+        <details>
+          <summary><span>이 프로그램북 공유 <small>SHARE</small></span><span class="plus" aria-hidden="true"></span></summary>
+          <div class="detail-body share-site">
+            <img src="./assets/site-qr.svg" width="180" height="180" alt="프로그램북 주소 QR 코드" loading="lazy">
+            <div>
+              <p>옆 사람에게 이 QR을 보여 주거나 링크를 보내세요.</p>
+              <p class="muted">홈 화면에 추가해 두면 앱처럼 바로 열 수 있고, 한 번 연 뒤에는 연결이 끊겨도 볼 수 있습니다.</p>
+              <button class="share" id="share-site" type="button">링크 공유</button>
+            </div>
+          </div>
+        </details>
       </div>
     </section>
 
@@ -157,7 +183,12 @@
     </footer>
   </main>
 
-  <div class="fab" id="fab" hidden>
+  <div class="update-bar" id="update-bar" hidden role="status">
+    <span>프로그램 정보가 업데이트되었습니다</span>
+    <button id="update-reload" type="button">새로고침</button>
+  </div>
+
+  <div class="fab" id="fab">
     <a class="fab-top" href="#top" aria-label="맨 위로">↑</a>
     <button class="fab-menu" id="menu-open" type="button" aria-haspopup="dialog" aria-controls="section-menu">MENU</button>
   </div>
@@ -177,6 +208,10 @@
       <a href="#awards"><span>07</span>AWARD<small>시상</small></a>
       <a href="#information"><span>08</span>INFO<small>행사 안내</small></a>
     </nav>
+    <div class="sheet-saved" id="sheet-saved" hidden>
+      <h3>SAVED <small>저장한 발표</small></h3>
+      <ul></ul>
+    </div>
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
