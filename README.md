@@ -57,10 +57,10 @@ window.SYMPOSIUM = {
 - `assets/poster-art.webp`, `bsss-band*.webp`, `dgist-logo.png`: 포스터 PDF에서 추출한 그래픽
 - `assets/BoonTook-Regular.woff`: 영문 표제 글꼴(SIL OFL, 라틴 문자만 남긴 subset). 한글은 Pretendard(jsDelivr CDN)로 표시됩니다.
 
-## GitHub Pages 배포
+## 배포 (확정)
 
-1. 사용할 GitHub 저장소에 이 폴더의 내용물을 올립니다. 저장소 루트에 `index.html`이 위치해야 합니다.
-2. GitHub 저장소의 **Settings → Pages**에서 배포 소스를 해당 브랜치의 `/ (root)`로 설정합니다.
-3. GitHub가 제공하는 Pages 주소를 실제 모바일 기기에서 확인한 뒤 그 주소로 QR 코드를 만듭니다.
+- 주소: **https://moo-75.github.io/bsss-program-book/**
+- 저장소: https://github.com/Moo-75/bsss-program-book (공개, `main` 브랜치 루트에서 Pages 배포)
+- QR 코드: `../output/qr/` (`bsss_qr_black.*` 인쇄용 기본, `bsss_qr_blue.*` 포스터 색). 오류 정정 H 등급.
 
-저장소와 Pages 주소가 정해지기 전에는 QR 코드를 생성하지 않습니다. 데이터와 웹사이트는 정적 파일이므로 Pages에 게시하는 내용은 방문자가 읽을 수 있습니다.
+수정은 `symposium-web/`에서 하고, `symposium-publish/`(저장소와 연결된 폴더)로 복사한 뒤 commit·push하면 1분 안팎으로 반영됩니다. **저장소 이름이나 계정을 바꾸면 주소가 바뀌어 이미 인쇄한 QR이 작동하지 않습니다.** 공개 저장소이므로 `data.js`에 넣은 내용은 누구나 볼 수 있습니다.
