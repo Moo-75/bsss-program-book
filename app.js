@@ -450,6 +450,39 @@
     box.querySelector('ul').replaceChildren(...links);
   }
 
+  // 날짜 숫자가 슬롯처럼 굴러가다 제자리에 멈춘다. 화면 낭독기는 숨긴 원래 문장을 읽는다
+  function rollDate() {
+    const date = document.querySelector('.hero-date');
+    if (!date || date.dataset.rolled) return;
+    date.dataset.rolled = '1';
+    const copy = date.cloneNode(true);
+    copy.querySelectorAll('br').forEach(br => br.replaceWith(' '));
+    const label = node('span', 'sr-only', copy.textContent.replace(/\s+/g, ' ').trim());
+    const visual = node('span', 'date-visual');
+    visual.setAttribute('aria-hidden', 'true');
+    let order = 0;
+    [...date.childNodes].forEach(child => {
+      if (child.nodeType !== Node.TEXT_NODE) { if (!child.classList?.contains('sr-only')) visual.append(child); else child.remove(); return; }
+      [...child.textContent].forEach(ch => {
+        if (!/\d/.test(ch)) { visual.append(document.createTextNode(ch)); return; }
+        const digit = Number(ch);
+        const steps = 7 + order * 3;
+        const roll = node('span', 'roll');
+        roll.append(node('span', 'roll-size', ch));
+        const strip = node('span', 'roll-strip');
+        for (let k = steps; k >= 0; k--) strip.append(node('span', '', (digit - k + 100) % 10));
+        strip.style.setProperty('--to', `${-steps}em`);
+        strip.style.setProperty('--delay', `${0.55 + order * 0.08}s`);
+        strip.style.setProperty('--dur', `${1.1 + order * 0.18}s`);
+        roll.append(strip);
+        visual.append(roll);
+        order++;
+      });
+      child.remove();
+    });
+    date.replaceChildren(label, visual);
+  }
+
   // 스크롤 진행 막대와 섹션 등장 효과
   function setupMotion() {
     const bar = $('progress');
@@ -463,6 +496,19 @@
     update();
 
     if (reducedMotion() || !('IntersectionObserver' in window)) return;
+    rollDate();
+
+    // 첫 화면에서 스크롤하면 일러스트 부품이 서로 다른 방향·속도로 흩어진다 (--p: 0 → 1)
+    const art = document.querySelector('.hero-art');
+    let artTicking = false;
+    const scatter = () => {
+      const end = art.offsetTop + art.offsetHeight;
+      art.style.setProperty('--p', Math.min(1, Math.max(0, scrollY / end)).toFixed(3));
+      artTicking = false;
+    };
+    addEventListener('scroll', () => { if (!artTicking) { artTicking = true; requestAnimationFrame(scatter); } }, { passive: true });
+    scatter();
+
     const targets = document.querySelectorAll('.section-head, .section-desc, .section .content, .info-list, .hero-intro');
     const observer = new IntersectionObserver(items => items.forEach(item => {
       if (!item.isIntersecting) return;

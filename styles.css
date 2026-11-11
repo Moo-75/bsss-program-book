@@ -283,6 +283,28 @@ mark{background:var(--sky-soft);color:inherit;border-radius:3px;padding:0 1px}
 .art-ring{--dx:1.4%;--dy:-1.3%;--r:-10deg;--s:1.05;--t:8.8s;--d:-5s}
 .art-dots{--dx:1%;--dy:1.6%;--r:6deg;--t:5.9s;--d:-1.5s}
 .art-circles{--dx:-1.2%;--dy:-1.5%;--s:1.06;--t:6.3s;--d:-3.7s}
+/* 스크롤하면 흩어지는 방향과 거리 (--p는 app.js가 0→1로 채운다) */
+.hero-art img{translate:calc(var(--sx,0px) * var(--p,0)) calc(var(--sy,0px) * var(--p,0));opacity:calc(1 - var(--p,0) * .5)}
+/* 흩어진 부품이 가로 스크롤을 만들거나 글자를 덮지 않게 */
+@media (max-width:959px){.page{overflow-x:clip}}
+.now-banner[hidden]{display:none}
+.hero-foot,.hero-intro{position:relative;z-index:1}
+.art-brain{--sx:0px;--sy:-40px}
+.art-neuron{--sx:-70px;--sy:-110px}
+.art-halftone{--sx:30px;--sy:-10px}
+.art-membrane{--sx:150px;--sy:-10px}
+.art-orbit{--sx:120px;--sy:-90px}
+.art-ring{--sx:-140px;--sy:-10px}
+.art-dots{--sx:-140px;--sy:-10px}
+.art-circles{--sx:-130px;--sy:-30px}
+
+/* 날짜 숫자 슬롯 */
+.roll{position:relative;display:inline-block;clip-path:inset(0 -50%)}
+.roll-size{visibility:hidden}
+.roll-strip{position:absolute;left:0;right:0;top:0;display:flex;flex-direction:column;align-items:center;transform:translateY(var(--to));animation:roll var(--dur,1.2s) var(--delay,.5s) cubic-bezier(.15,.85,.25,1.04) both}
+.roll-strip span{display:block;height:1em;line-height:1em}
+.roll,.roll-size{height:1em;line-height:1em;vertical-align:top}
+@keyframes roll{from{transform:translateY(0)}}
 .hero-venue{animation:rise .6s .45s cubic-bezier(.2,.8,.2,1) both}
 .hero-date{animation:rise .6s .55s cubic-bezier(.2,.8,.2,1) both}
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease-out,transform .55s cubic-bezier(.2,.8,.2,1)}
