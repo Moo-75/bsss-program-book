@@ -39,6 +39,8 @@
   let saved = new Set();
   try { saved = new Set(JSON.parse(localStorage.getItem(SAVE_KEY) || '[]')); } catch (error) { /* 저장소를 쓸 수 없으면 이번 방문 동안만 유지 */ }
   let savedOnly = false;
+  const POSTER_PREVIEW = 8;   // 포스터 목록을 접었을 때 보여 줄 개수
+  let postersAll = false;
   const STAR = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 3.2l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6L3.2 9.6l6.1-.8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
   function toggleSave(id, button) {
     const on = !saved.has(id);
@@ -85,9 +87,13 @@
       const summary = node('summary');
       summary.append(highlighted('span', 'entry-no', entryNumber(item, index), term));
       const label = node('span');
-      label.append(node('span', 'entry-kind', item.lang ? `${KINDS[kind].label} · IN ${String(item.lang).toUpperCase()}` : KINDS[kind].label));
+      // 섹션 제목과 겹치는 종류 표시는 생략하고, 발표 언어처럼 추가 정보가 있을 때만 보여 준다
+      if (item.lang) label.append(node('span', 'entry-kind', `IN ${String(item.lang).toUpperCase()}`));
       label.append(highlighted('span', 'entry-title', item.title || '발표 제목 준비 중', term));
       label.append(highlighted('span', 'entry-meta', join(item.speaker, item.affiliation, item.time) || '발표자 정보 준비 중', term));
+      // 긴 글(초록)은 접어 두고, 눌러서 연다는 것을 글자로 알려 준다 (문구는 styles.css의 .entry-more)
+      const more = node('span', 'entry-more'); more.setAttribute('aria-hidden', 'true');
+      label.append(more);
       const plus = node('span', 'plus'); plus.setAttribute('aria-hidden', 'true');
       summary.append(label, plus);
 
@@ -164,7 +170,20 @@
         : empty('검색 결과가 없습니다', '번호, 이름, 제목의 일부로 다시 찾아보세요.'));
       return;
     }
-    renderEntries('posters', filtered, term);
+    // 포스터가 많으면 처음 몇 개만 보여 주고 나머지는 버튼으로 편다 (검색·저장 보기에서는 전부 표시)
+    const foldable = !term && !savedOnly && filtered.length > POSTER_PREVIEW + 2;
+    renderEntries('posters', foldable && !postersAll ? filtered.slice(0, POSTER_PREVIEW) : filtered, term);
+    if (foldable) {
+      const toggle = node('button', 'list-more', postersAll ? '목록 접기' : `포스터 ${filtered.length}개 모두 보기`);
+      toggle.type = 'button';
+      toggle.setAttribute('aria-expanded', String(postersAll));
+      toggle.addEventListener('click', () => {
+        postersAll = !postersAll;
+        renderPosters();
+        if (!postersAll) $('posters').scrollIntoView({ block: 'start' });
+      });
+      $('posters-content').append(toggle);
+    }
   }
 
   // 포스터 배치도: data.js의 posterMap을 그린다. 없으면 포스터 번호(또는 예시 번호)로 임시 배치도를 만든다
@@ -526,8 +545,9 @@
     const id = decodeURIComponent(location.hash.slice(1));
     if (!id) return;
     let target = document.getElementById(id);
-    if (!target && id.startsWith('poster-') && (savedOnly || $('poster-search').value)) {
+    if (!target && id.startsWith('poster-')) {
       savedOnly = false;
+      postersAll = true;
       $('poster-search').value = '';
       renderPosters();
       target = document.getElementById(id);
