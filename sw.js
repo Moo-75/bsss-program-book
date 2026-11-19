@@ -1,6 +1,6 @@
 /* 한 번 연 뒤에는 행사장 연결이 불안정해도 프로그램북이 열리게 한다.
-   화면·데이터 파일은 항상 최신을 먼저 받고(3초 안에 안 오면 저장본), 이미지·글꼴은 저장본을 먼저 쓴다. */
-const CACHE = 'bsss15-v5';
+   화면·데이터 파일은 항상 서버에 최신인지 확인해서 받고(3초 안에 안 오면 저장본), 이미지·글꼴은 저장본을 먼저 쓴다. */
+const CACHE = 'bsss15-v6';
 const SHELL = [
   './', './styles.css', './app.js', './data.js',
   './assets/BoonTook-Regular.woff', './assets/bsss-band.webp', './assets/bsss-band-vertical.webp',
@@ -8,7 +8,7 @@ const SHELL = [
 ];
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL.map(url => new Request(url, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {
@@ -20,7 +20,8 @@ self.addEventListener('activate', event => {
 async function networkFirst(request) {
   const cache = await caches.open(CACHE);
   const cached = await cache.match(request, { ignoreSearch: true });
-  const network = fetch(request).then(response => {
+  // GitHub Pages는 max-age=600을 붙이므로, 브라우저 HTTP 캐시를 건너뛰고 서버에 바뀌었는지 확인한다 (안 바뀌었으면 304로 가볍게 끝남)
+  const network = fetch(request, { cache: 'no-cache' }).then(response => {
     if (response.ok) cache.put(request, response.clone());
     return response;
   });
