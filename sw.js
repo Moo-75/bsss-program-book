@@ -1,6 +1,6 @@
 /* 한 번 연 뒤에는 행사장 연결이 불안정해도 프로그램북이 열리게 한다.
    화면·데이터 파일은 항상 최신을 먼저 받고(3초 안에 안 오면 저장본), 이미지·글꼴은 저장본을 먼저 쓴다. */
-const CACHE = 'bsss15-v4';
+const CACHE = 'bsss15-v5';
 const SHELL = [
   './', './styles.css', './app.js', './data.js',
   './assets/BoonTook-Regular.woff', './assets/bsss-band.webp', './assets/bsss-band-vertical.webp',
