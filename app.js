@@ -694,16 +694,29 @@
     if (reducedMotion() || !('IntersectionObserver' in window)) return;
     rollDate();
 
-    // 첫 화면에서 스크롤하면 일러스트 부품이 서로 다른 방향·속도로 흩어진다 (--p: 0 → 1)
+    // 첫 화면에서 스크롤하면 일러스트 부품이 흩어지고, 다시 올라오면 모인다.
+    // 스크롤 위치를 그대로 따라가지 않고, 방향이 정해지는 순간 CSS 전환으로 끝까지 이어서 재생한다
+    // (중간에 방향을 바꾸면 그 자리에서 자연스럽게 되돌아간다)
     const art = document.querySelector('.hero-art');
+    const SCATTER_AT = 0.1;   // 내려갈 때: 일러스트 높이의 10%를 지나면 흩어지기 시작
+    const GATHER_AT = 0.7;    // 올라올 때: 일러스트가 다시 보이는 구간(70%)에 들어오면 모이기 시작
+    let lastY = scrollY;
     let artTicking = false;
+    const artEnd = () => art.offsetTop + art.offsetHeight;
     const scatter = () => {
-      const end = art.offsetTop + art.offsetHeight;
-      art.style.setProperty('--p', Math.min(1, Math.max(0, scrollY / end)).toFixed(3));
       artTicking = false;
+      const y = scrollY;
+      const dy = y - lastY;
+      if (Math.abs(dy) < 2) return;   // iOS 바운스 등 미세한 흔들림 무시
+      lastY = y;
+      const p = y / artEnd();
+      if (dy > 0 && p > SCATTER_AT) art.classList.add('is-scattered');
+      else if (dy < 0 && p < GATHER_AT) art.classList.remove('is-scattered');
     };
+    // 새로고침해서 이미 아래에 있으면 전환 없이 바로 흩어진 상태로 시작
+    art.classList.toggle('is-scattered', scrollY / artEnd() > SCATTER_AT);
+    requestAnimationFrame(() => requestAnimationFrame(() => art.classList.add('art-ready')));
     addEventListener('scroll', () => { if (!artTicking) { artTicking = true; requestAnimationFrame(scatter); } }, { passive: true });
-    scatter();
 
     const targets = document.querySelectorAll('.section-head, .section-desc, .section .content, .info-list, .hero-intro');
     const observer = new IntersectionObserver(items => items.forEach(item => {

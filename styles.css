@@ -283,8 +283,12 @@ mark{background:var(--sky-soft);color:inherit;border-radius:3px;padding:0 1px}
 .art-ring{--dx:1.4%;--dy:-1.3%;--r:-10deg;--s:1.05;--t:8.8s;--d:-5s}
 .art-dots{--dx:1%;--dy:1.6%;--r:6deg;--t:5.9s;--d:-1.5s}
 .art-circles{--dx:-1.2%;--dy:-1.5%;--s:1.06;--t:6.3s;--d:-3.7s}
-/* 스크롤하면 흩어지는 방향과 거리 (--p는 app.js가 0→1로 채운다) */
+/* 스크롤하면 흩어지는 방향과 거리. app.js가 .is-scattered를 붙이고 떼면 전환으로 끝까지 이어서 움직인다 */
 .hero-art img{translate:calc(var(--sx,0px) * var(--p,0)) calc(var(--sy,0px) * var(--p,0));opacity:calc(1 - var(--p,0) * .5)}
+.hero-art.is-scattered{--p:1}
+.hero-art.art-ready img{transition:translate 1.1s cubic-bezier(.22,.8,.24,1) var(--sd,0s),opacity 1.1s ease var(--sd,0s)}
+/* 부품마다 출발을 조금씩 어긋나게 */
+.art-neuron{--sd:.04s}.art-orbit{--sd:.08s}.art-ring{--sd:.06s}.art-dots{--sd:.1s}.art-circles{--sd:.12s}.art-membrane{--sd:.05s}
 /* 흩어진 부품이 가로 스크롤을 만들거나 글자를 덮지 않게 */
 @media (max-width:959px){.page{overflow-x:clip}}
 .now-banner[hidden]{display:none}
