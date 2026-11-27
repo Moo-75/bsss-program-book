@@ -23,11 +23,11 @@
 
   // 발표 종류별 설정: id 접두어는 공유 링크(#oral-01 등)에 쓰인다
   const KINDS = {
-    keynote: { label: 'KEYNOTE LECTURE', prefix: 'keynote', empty: ['기조강연 정보를 준비하고 있습니다', '연사와 강연 초록이 확정되면 이곳에 안내합니다.'] },
-    oral: { label: 'ORAL PRESENTATION', prefix: 'oral', empty: ['구두발표 정보를 준비하고 있습니다', '발표자와 초록이 확정되면 이곳에서 확인할 수 있습니다.'] },
-    posters: { label: 'POSTER', prefix: 'poster', empty: ['포스터 목록을 준비하고 있습니다', '목록이 공개되면 번호와 발표자로 검색할 수 있습니다.'] },
-    flash: { label: 'FLASH TALK', prefix: 'flash', empty: ['플래시 토크 정보를 준비하고 있습니다', '발표자와 주제가 확정되면 이곳에 안내합니다.'] },
-    rewarded: { label: 'REWARDED TALK', prefix: 'rewarded', empty: ['발표 정보를 준비하고 있습니다', '확정된 발표자와 초록을 이곳에 안내할 예정입니다.'] }
+    keynote: { label: 'KEYNOTE LECTURE', prefix: 'keynote', empty: ['Keynote lectures coming soon', 'Speakers and abstracts will appear here once confirmed.'] },
+    oral: { label: 'ORAL PRESENTATION', prefix: 'oral', empty: ['Oral presentations coming soon', 'Presenters and abstracts will appear here once confirmed.'] },
+    posters: { label: 'POSTER', prefix: 'poster', empty: ['Poster list coming soon', 'Once published, you can search by number and presenter.'] },
+    flash: { label: 'FLASH TALK', prefix: 'flash', empty: ['Flash talks coming soon', 'Presenters and topics will appear here once confirmed.'] },
+    rewarded: { label: 'REWARDED TALK', prefix: 'rewarded', empty: ['Talks coming soon', 'Confirmed presenters and abstracts will appear here.'] }
   };
   const CHIP = { keynote: 'KEYNOTE', oral: 'ORAL', poster: 'POSTER', posters: 'POSTER', flash: 'FLASH TALK', rewarded: 'REWARDED', award: 'AWARD', awards: 'AWARD', break: 'BREAK', opening: 'OPENING', closing: 'CLOSING' };
 
@@ -47,7 +47,7 @@
     if (on) saved.add(id); else saved.delete(id);
     try { localStorage.setItem(SAVE_KEY, JSON.stringify([...saved])); } catch (error) { /* 무시 */ }
     button.setAttribute('aria-pressed', String(on));
-    toast(on ? '저장했습니다 · MENU에서 모아 볼 수 있어요' : '저장을 해제했습니다');
+    toast(on ? 'Saved · find it under MENU' : 'Removed from saved');
     updateSavedButton();
     const board = id.startsWith('poster-') && $(boardId(id.slice(7)));
     if (board) board.classList.toggle('is-saved', on);
@@ -57,7 +57,7 @@
     const button = $('saved-only');
     const count = list('posters').filter((item, index) => saved.has(entryId('posters', item, index))).length;
     button.hidden = !list('posters').length;
-    button.textContent = `★ 저장한 포스터 ${count}`;
+    button.textContent = `★ Saved posters ${count}`;
     button.setAttribute('aria-pressed', String(savedOnly));
   }
 
@@ -89,8 +89,8 @@
       const label = node('span');
       // 섹션 제목과 겹치는 종류 표시는 생략하고, 발표 언어처럼 추가 정보가 있을 때만 보여 준다
       if (item.lang) label.append(node('span', 'entry-kind', `IN ${String(item.lang).toUpperCase()}`));
-      label.append(highlighted('span', 'entry-title', item.title || '발표 제목 준비 중', term));
-      label.append(highlighted('span', 'entry-meta', join(item.speaker, item.affiliation, item.time) || '발표자 정보 준비 중', term));
+      label.append(highlighted('span', 'entry-title', item.title || 'Title to be announced', term));
+      label.append(highlighted('span', 'entry-meta', join(item.speaker, item.affiliation, item.time) || 'Presenter to be announced', term));
       // 긴 글(초록)은 접어 두고, 눌러서 연다는 것을 글자로 알려 준다 (문구는 styles.css의 .entry-more)
       const more = node('span', 'entry-more'); more.setAttribute('aria-hidden', 'true');
       label.append(more);
@@ -108,7 +108,7 @@
         }
         if (item.bio) body.append(node('p', '', item.bio));
       }
-      body.append(node('h3', '', 'ABSTRACT'), node('p', '', item.abstract || '초록이 준비되는 대로 안내합니다.'));
+      body.append(node('h3', '', 'ABSTRACT'), node('p', '', item.abstract || 'Abstract to be announced.'));
       if (Array.isArray(item.publications) && item.publications.length) {
         body.append(node('h3', '', 'SELECTED PUBLICATIONS'));
         const ol = node('ol');
@@ -116,13 +116,13 @@
         body.append(ol);
       }
       if (kind === 'posters') {
-        const where = node('button', 'share share-map', '배치도에서 위치 보기');
+        const where = node('button', 'share share-map', 'Show on poster map');
         where.type = 'button';
         where.addEventListener('click', () => locateBoard(entryNumber(item, index)));
         body.append(where);
       }
       body.append(memo(detail.id));
-      const share = node('button', 'share', '이 발표 링크 공유');
+      const share = node('button', 'share', 'Share link to this talk');
       share.type = 'button';
       share.addEventListener('click', () => shareLink(detail.id, item.title));
       body.append(share);
@@ -131,7 +131,7 @@
       const save = node('button', 'save');
       save.type = 'button';
       save.innerHTML = STAR;
-      save.setAttribute('aria-label', `저장: ${item.title || entryNumber(item, index)}`);
+      save.setAttribute('aria-label', `Save: ${item.title || entryNumber(item, index)}`);
       save.setAttribute('aria-pressed', String(saved.has(detail.id)));
       save.addEventListener('click', () => toggleSave(detail.id, save));
 
@@ -166,15 +166,15 @@
     $('poster-count').textContent = term || savedOnly ? `${filtered.length} / ${all.length} POSTERS` : `${all.length} POSTERS`;
     if (!filtered.length) {
       $('posters-content').replaceChildren(savedOnly && !term
-        ? empty('저장한 포스터가 없습니다', '포스터 오른쪽의 ☆를 누르면 여기에 모입니다.')
-        : empty('검색 결과가 없습니다', '번호, 이름, 제목의 일부로 다시 찾아보세요.'));
+        ? empty('No saved posters', 'Tap ☆ next to a poster to collect it here.')
+        : empty('No results', 'Try part of a number, name or title.'));
       return;
     }
     // 포스터가 많으면 처음 몇 개만 보여 주고 나머지는 버튼으로 편다 (검색·저장 보기에서는 전부 표시)
     const foldable = !term && !savedOnly && filtered.length > POSTER_PREVIEW + 2;
     renderEntries('posters', foldable && !postersAll ? filtered.slice(0, POSTER_PREVIEW) : filtered, term);
     if (foldable) {
-      const toggle = node('button', 'list-more', postersAll ? '목록 접기' : `포스터 ${filtered.length}개 모두 보기`);
+      const toggle = node('button', 'list-more', postersAll ? 'Show less' : `Show all ${filtered.length} posters`);
       toggle.type = 'button';
       toggle.setAttribute('aria-expanded', String(postersAll));
       toggle.addEventListener('click', () => {
@@ -195,11 +195,11 @@
     const config = data.posterMap && Array.isArray(data.posterMap.areas) ? data.posterMap : null;
     const chunk = (items, size) => Array.from({ length: Math.ceil(items.length / size) }, (_, i) => items.slice(i * size, i * size + size));
     const placeholder = Array.from({ length: 24 }, (_, i) => `P${String(i + 1).padStart(2, '0')}`);
-    const areas = config ? config.areas : [{ name: event.venue ? `${event.venue} 포스터 구역` : '포스터 구역', rows: chunk(numbers.length ? numbers : placeholder, 6), entrance: 'bottom' }];
+    const areas = config ? config.areas : [{ name: event.venue ? `${event.venue} poster area` : 'Poster area', rows: chunk(numbers.length ? numbers : placeholder, 6), entrance: 'bottom' }];
     const nodes = [];
     if (!config) {
       const flag = node('p', 'map-flag');
-      flag.append(node('b', '', '임시 배치도'), document.createTextNode(numbers.length ? ' 번호 순서로 그린 예시입니다. 실제 위치는 확정 후 안내됩니다.' : ' 포스터 목록과 위치가 확정되면 실제 배치로 바뀝니다.'));
+      flag.append(node('b', '', 'Draft map'), document.createTextNode(numbers.length ? ' Drawn in number order as an example. Actual positions will be announced.' : ' The real layout will appear once posters and positions are confirmed.'));
       nodes.push(flag);
     } else if (config.note) {
       nodes.push(node('p', 'map-flag', config.note));
@@ -226,11 +226,11 @@
         rows.append(line);
       });
       box.append(rows);
-      if (area.entrance) box.append(node('span', 'map-entrance', 'ENTRANCE 입구'));
+      if (area.entrance) box.append(node('span', 'map-entrance', 'ENTRANCE'));
       nodes.push(box);
     });
     const legend = node('p', 'map-legend');
-    legend.append(node('span', 'is-saved', '저장한 포스터'), node('span', 'is-match', '검색 결과'));
+    legend.append(node('span', 'is-saved', 'Saved'), node('span', 'is-match', 'Search match'));
     nodes.push(legend);
     body.replaceChildren(...nodes);
   }
@@ -248,7 +248,7 @@
   // 포스터 초록에서 "배치도에서 위치 보기"를 누르면 배치도의 해당 자리를 깜빡여 보여 준다
   function locateBoard(number) {
     const board = $(boardId(number));
-    if (!board) { toast('배치도에 아직 위치가 없습니다'); return; }
+    if (!board) { toast('No position on the map yet'); return; }
     $('poster-map').open = true;
     board.scrollIntoView({ block: 'center', behavior: reducedMotion() ? 'auto' : 'smooth' });
     board.classList.remove('is-located');
@@ -262,10 +262,10 @@
     const key = `bsss15-note-${id}`;
     const box = node('label', 'memo');
     const head = node('span', 'memo-head');
-    head.append(node('b', '', 'MY NOTE'), node('small', 'memo-state', '이 기기에만 저장됩니다'));
+    head.append(node('b', '', 'MY NOTE'), node('small', 'memo-state', 'Saved on this device only'));
     const area = node('textarea');
     area.rows = 3;
-    area.placeholder = '발표를 들으며 메모하거나 질문을 적어 두세요';
+    area.placeholder = 'Jot down notes or questions during the talk';
     try { area.value = localStorage.getItem(key) || ''; } catch (error) { /* 저장소를 쓸 수 없으면 빈 메모 */ }
     let timer;
     area.addEventListener('input', () => {
@@ -273,8 +273,8 @@
       timer = setTimeout(() => {
         try {
           if (area.value.trim()) localStorage.setItem(key, area.value); else localStorage.removeItem(key);
-          head.querySelector('.memo-state').textContent = '저장됨 ✓';
-        } catch (error) { head.querySelector('.memo-state').textContent = '이 브라우저에서는 저장할 수 없습니다'; }
+          head.querySelector('.memo-state').textContent = 'Saved ✓';
+        } catch (error) { head.querySelector('.memo-state').textContent = 'Cannot save in this browser'; }
       }, 400);
     });
     box.append(head, area);
@@ -338,7 +338,7 @@
     return isNaN(date) ? new Date() : date;
   }
   const localDate = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-  const duration = minutes => minutes >= 60 ? `${Math.floor(minutes / 60)}시간 ${minutes % 60}분` : `${minutes}분`;
+  const duration = minutes => minutes >= 60 ? `${Math.floor(minutes / 60)} h ${minutes % 60} min` : `${minutes} min`;
 
   // 시간표 아이콘 (선 아이콘, currentColor)
   const ICON_PATHS = {
@@ -382,7 +382,7 @@
     const entries = list('schedule');
     const target = $('schedule-content');
     if (!entries.length) {
-      target.replaceChildren(empty('시간표를 준비하고 있습니다', '확정된 일정과 발표 순서가 이곳에 안내됩니다.'));
+      target.replaceChildren(empty('Schedule coming soon', 'The confirmed program will appear here.'));
       return;
     }
     const root = node('ol', 'schedule-list');
@@ -392,7 +392,7 @@
       row.id = `schedule-row-${i}`;
       const [start, end] = String(item.time || '').split(/\s*[–—~-]\s*/);
       const time = node('span', 'schedule-time');
-      time.append(node('b', '', start || '미정'));
+      time.append(node('b', '', start || 'TBA'));
       if (end) time.append(node('small', '', end));
       const mark = node('span', 'schedule-mark');
       const glyph = icon(type);
@@ -400,7 +400,7 @@
 
       const info = node('div', 'schedule-info');
       const head = node('div', 'schedule-head');
-      const titleText = item.title || '프로그램 미정';
+      const titleText = item.title || 'To be announced';
       if (item.ref && !item.talks) {
         const a = node('a', 'schedule-title', titleText);
         a.href = `#${item.ref}`;
@@ -421,7 +421,7 @@
           const link = node(talk.ref ? 'a' : 'div', 'schedule-talk');
           if (talk.ref) link.href = `#${talk.ref}`;
           const text = node('span', 'schedule-talk-text');
-          text.append(node('small', '', talk.label || ''), node('span', '', talk.title || '발표 제목 준비 중'));
+          text.append(node('small', '', talk.label || ''), node('span', '', talk.title || 'Title to be announced'));
           link.append(text);
           const who = speakerBlock(talk);
           if (who) link.append(who);
@@ -466,7 +466,7 @@
     };
     if (current !== -1) lines.push(line('NOW', current));
     if (next !== -1) lines.push(line('NEXT', next));
-    if (!lines.length) lines.push(node('p', '', minutes < (times[0]?.start ?? 0) ? '곧 행사가 시작됩니다.' : '오늘 일정이 모두 끝났습니다. 함께해 주셔서 감사합니다.'));
+    if (!lines.length) lines.push(node('p', '', minutes < (times[0]?.start ?? 0) ? 'The symposium starts soon.' : 'That is all for today. Thank you for joining us.'));
     banner.replaceChildren(...lines);
     banner.hidden = false;
 
@@ -478,7 +478,7 @@
     live.classList.toggle('is-next', !isNow);
     live.querySelector('b').textContent = isNow ? 'NOW' : 'NEXT';
     live.querySelector('.live-title').textContent = entries[shown].title || '';
-    live.querySelector('.live-left').textContent = isNow ? `${duration(t.end - minutes)} 남음` : `${duration(t.start - minutes)} 후`;
+    live.querySelector('.live-left').textContent = isNow ? `${duration(t.end - minutes)} left` : `in ${duration(t.start - minutes)}`;
     live.querySelector('.live-bar').style.transform = `scaleX(${isNow && t.end > t.start ? Math.min(1, (minutes - t.start) / (t.end - t.start)) : 0})`;
     live.hidden = false;
     document.documentElement.classList.add('has-live');
@@ -496,14 +496,14 @@
     });
     const venue = event.venue || 'DGIST';
     const links = [
-      ['지도에서 보기', event.mapUrl],
-      ['카카오맵', `https://map.kakao.com/?q=${encodeURIComponent('DGIST')}`],
-      ['네이버 지도', `https://map.naver.com/p/search/${encodeURIComponent('DGIST')}`]
+      ['Open map', event.mapUrl],
+      ['Kakao Map', `https://map.kakao.com/?q=${encodeURIComponent('DGIST')}`],
+      ['Naver Map', `https://map.naver.com/p/search/${encodeURIComponent('DGIST')}`]
     ].filter(([, href]) => href);
     $('map-links').replaceChildren(...links.map(([label, href]) => {
       const a = node('a', '', label);
       a.href = href; a.target = '_blank'; a.rel = 'noopener';
-      a.setAttribute('aria-label', `${label}: ${venue} (새 창)`);
+      a.setAttribute('aria-label', `${label}: ${venue} (opens in new tab)`);
       return a;
     }));
 
@@ -533,10 +533,10 @@
     try {
       if (navigator.share) { await navigator.share({ title: title || '15th BSSS Program Book', url }); return; }
       await navigator.clipboard.writeText(url);
-      toast('링크를 복사했습니다');
+      toast('Link copied');
     } catch (error) {
       if (error && error.name === 'AbortError') return;
-      window.prompt('아래 링크를 복사하세요', url);
+      window.prompt('Copy this link', url);
     }
   }
 
@@ -749,7 +749,7 @@
   function start() {
     data = window.SYMPOSIUM || {};
     event = data.event || {};
-    if (params.has('demo')) document.body.prepend(node('div', 'demo-flag', '예시 데이터 미리보기 · 실제 프로그램이 아닙니다'));
+    if (params.has('demo')) document.body.prepend(node('div', 'demo-flag', 'Demo data preview · not the real program'));
     else if (data.draft) document.body.prepend(node('div', 'demo-flag', data.draft));
     fillEvent();
     setupMenu();
@@ -759,10 +759,10 @@
     setInterval(updateNow, 30000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) updateNow(); });
     ['keynote', 'oral', 'flash', 'rewarded'].forEach(renderTalks);
-    renderSimple('awards-content', list('awards'), '시상 부문과 진행 순서가 확정되면 이곳에 안내합니다.', '시상 안내를 준비하고 있습니다');
-    renderSimple('laboratories-content', list('laboratories'), '참여 연구실 정보를 준비하고 있습니다.');
-    renderSimple('committee-content', list('committee'), '운영위원회 정보를 준비하고 있습니다.');
-    renderSimple('prizes-content', list('prizes'), '경품과 이벤트가 정해지면 이곳에 안내합니다.');
+    renderSimple('awards-content', list('awards'), 'Award categories and the ceremony order will appear here once confirmed.', 'Awards coming soon');
+    renderSimple('laboratories-content', list('laboratories'), 'Participating laboratories coming soon.');
+    renderSimple('committee-content', list('committee'), 'Organizing committee coming soon.');
+    renderSimple('prizes-content', list('prizes'), 'Prizes and events will appear here once decided.');
     $('poster-search').addEventListener('input', renderPosters);
     $('clear-search').addEventListener('click', () => { $('poster-search').value = ''; renderPosters(); $('poster-search').focus(); });
     $('saved-only').addEventListener('click', () => { savedOnly = !savedOnly; renderPosters(); });
@@ -772,7 +772,7 @@
     setupMotion();
     openFromHash();
     window.addEventListener('hashchange', openFromHash);
-    addEventListener('offline', () => toast('오프라인입니다 · 저장된 내용을 보여 드립니다'));
+    addEventListener('offline', () => toast('You are offline · showing saved content'));
     watchUpdates();
     // 한 번 열어 두면 연결이 끊겨도 볼 수 있게 한다
     if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('./sw.js').catch(() => {});

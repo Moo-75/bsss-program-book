@@ -276,7 +276,7 @@ mark{background:var(--sky-soft);color:inherit;border-radius:3px;padding:0 1px}
 @media (max-width:699px){.hero-art{--k:2}}
 .hero-art img{animation:drift var(--t,7s) var(--d,0s) ease-in-out infinite;will-change:transform}
 .art-brain{--dy:-1.1%;--r:-.8deg;--t:8.3s;--d:-1s;transform-origin:50% 60%}
-.art-neuron{--dx:.6%;--dy:-1.4%;--r:3deg;--t:6.7s;--d:-3s;transform-origin:50% 55%}
+.art-astrocyte{--dx:.6%;--dy:-1.4%;--r:3deg;--t:6.7s;--d:-3s;transform-origin:50% 55%}
 .art-halftone{--dy:.6%;--s:1.03;--t:10.1s;--d:-4s}
 .art-membrane{--dx:-.8%;--dy:-.9%;--r:-3.5deg;--t:7.4s;--d:-2s;transform-origin:45% 50%}
 .art-orbit{--dx:-1.6%;--dy:1%;--r:14deg;--t:9.2s;--d:-6s;transform-origin:35% 40%}
@@ -292,7 +292,7 @@ mark{background:var(--sky-soft);color:inherit;border-radius:3px;padding:0 1px}
 .now-banner[hidden]{display:none}
 .hero-foot,.hero-intro{position:relative;z-index:1}
 .art-brain{--sx:0px;--sy:-40px}
-.art-neuron{--sx:-70px;--sy:-110px}
+.art-astrocyte{--sx:-70px;--sy:-110px}
 .art-halftone{--sx:30px;--sy:-10px}
 .art-membrane{--sx:150px;--sy:-10px}
 .art-orbit{--sx:120px;--sy:-90px}
@@ -441,9 +441,9 @@ a.schedule-talk:active{transform:scale(.99)}
 /* 긴 목록·긴 글 압축: 닫힌 항목은 제목 2줄·발표자 1줄로 줄이고, 초록은 "초록 보기"를 눌러 연다 */
 .entry>summary>span:nth-child(2){min-width:0}
 .entry-more{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:.76rem;font-weight:700;color:var(--blue)}
-.entry-more::before{content:"초록 보기"}
+.entry-more::before{content:"Read abstract"}
 .entry-more::after{content:"";width:6px;height:6px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .2s}
-.entry[open] .entry-more::before{content:"접기"}
+.entry[open] .entry-more::before{content:"Close"}
 .entry[open] .entry-more::after{transform:translateY(2px) rotate(225deg)}
 .entry:not([open]) .entry-title{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
 .entry:not([open]) .entry-meta{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

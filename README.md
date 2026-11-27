@@ -65,7 +65,7 @@ window.SYMPOSIUM = {
 - **저장(★)**: 발표·포스터 오른쪽의 별을 누르면 그 기기에 저장됩니다. 포스터는 "저장한 포스터"만 모아 볼 수 있고, MENU 아래에 저장 목록이 나옵니다.
 - **공지**: `data.js`에 `notices: [{ time: "10:20", title: "제목", detail: "내용" }]`를 넣으면 맨 위에 파란 공지로 표시됩니다.
 - **업데이트 알림**: 열어 둔 화면은 3분마다 `data.js`를 다시 확인하고, 바뀌었으면 "새로고침" 알림을 띄웁니다. (GitHub Pages 반영까지 최대 10분쯤 걸릴 수 있습니다.)
-- **오프라인**: 한 번 연 뒤에는 연결이 끊겨도 열립니다(`sw.js`). 화면·데이터는 최신을 먼저 받고 3초 안에 안 오면 저장본을 씁니다. 이미지·글꼴 파일을 **같은 이름으로 교체**했다면 `sw.js`의 `CACHE` 이름(`bsss15-v6`)을 올려 주세요.
+- **오프라인**: 한 번 연 뒤에는 연결이 끊겨도 열립니다(`sw.js`). 화면·데이터는 최신을 먼저 받고 3초 안에 안 오면 저장본을 씁니다. 이미지·글꼴 파일을 **같은 이름으로 교체**했다면 `sw.js`의 `CACHE` 이름(`bsss15-v7`)을 올려 주세요.
 - **홈 화면 추가**: `manifest.webmanifest`와 `assets/icon-*.png`.
 - **예시 데이터 미리보기**: 주소 뒤에 `?demo=1`을 붙이면 `data-demo.js`의 가짜 데이터로 모든 기능을 볼 수 있습니다. 예: `?demo=1&now=2027-01-21T11:10`. 실제 방문자에게는 보이지 않습니다.
 - **D-day**: 행사 전에는 첫 화면에 D-n, 당일에는 TODAY가 표시됩니다.
@@ -74,9 +74,9 @@ window.SYMPOSIUM = {
 
 ## 에셋
 
-- `assets/art/*.webp`: 포스터 일러스트를 부품별(뇌, 뉴런, 망점 원, 막단백질, 고리, 점 등)로 나눈 레이어. 첫 화면에서 각자 조금씩 다르게 움직입니다. 위치는 `index.html`, 움직임은 `styles.css`의 `.art-*`에서 조정합니다.
+- `assets/art/*.webp`: 포스터 일러스트를 부품별(뇌, 아스트로사이트, 망점 원, 막단백질, 고리, 점 등)로 나눈 레이어. 아스트로사이트(`astrocyte.webp`)는 피드백에 따라 포스터의 뉴런 대신 Codex 이미지 생성으로 만든 그림입니다(원본: `../output/astrocyte-drafts/codex/astro_1_fibrous.png`, 투명 배경과 코발트 114F9F로 정리). 첫 화면에서 각자 조금씩 다르게 움직입니다. 위치는 `index.html`, 움직임은 `styles.css`의 `.art-*`에서 조정합니다.
 - `assets/bsss-band*.webp`, `dgist-logo.png`: 포스터 PDF에서 추출한 그래픽
-- `assets/BoonTook-Regular.woff`: 영문 표제 글꼴(SIL OFL, 라틴 문자만 남긴 subset). 한글은 Pretendard(jsDelivr CDN)로 표시됩니다.
+- `assets/BoonTook-Regular.woff`: 영문 표제 글꼴(SIL OFL, 라틴 문자만 남긴 subset). 본문은 Pretendard(jsDelivr CDN)로 표시됩니다. 화면 문구는 모두 영어입니다.
 
 ## 배포 (확정)
 

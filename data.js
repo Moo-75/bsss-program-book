@@ -6,12 +6,12 @@
       - 시상 부문, 경품: 2024 프로그램북을 참고한 임시 항목
       실제 정보로 바꾼 뒤 draft 줄을 지우면 상단의 "임시 데이터" 안내가 사라집니다. */
 window.SYMPOSIUM = {
-  draft: "임시 데이터입니다. 시간표는 15회 최종 스케줄표 기준이며, 발표 제목·초록 등은 지난 프로그램북(2024·2025) 내용으로 채워 두었습니다.",
+  draft: "Draft data. The schedule follows the final 15th program; talk titles, abstracts and other details are placeholders from previous program books (2024, 2025).",
   event: {
     date: "2027-01-14",
     dateLabel: "2027. 01. 14 (THU)",
     venue: "DGIST E7, L29",
-    venueNote: "행사장 위치와 상세 안내는 최종 확인 후 업데이트됩니다.",
+    venueNote: "Venue details and directions will be announced.",
     mapUrl: ""
   },
   notices: [],
@@ -68,12 +68,12 @@ window.SYMPOSIUM = {
     {"number": "03", "title": "Slitrk paralogs configure excitatory synaptic specificity via different extracellular and intracellular mechanisms", "speaker": "Byeongchan Kim", "affiliation": "DGIST", "time": "16:30"}
   ],
   awards: [
-    {"name": "Best Oral Presentation Award", "detail": "구두발표 우수 발표자 시상 (임시 항목)"},
-    {"name": "Best Poster Award", "detail": "포스터 우수 발표자 시상 (임시 항목)"}
+    {"name": "Best Oral Presentation Award", "detail": "Award for the best oral presentation (placeholder)"},
+    {"name": "Best Poster Award", "detail": "Award for the best poster presentation (placeholder)"}
   ],
   prizes: [
-    {"name": "Lucky Draw", "detail": "모든 세션 참석자 대상. 등록할 때 받은 이름표에 스탬프 3개를 모으면 추첨권을 드립니다.\n1st 무선 헤드폰(1명) · 2nd 상품권(2명) · 3rd 무선 마우스(3명) · 4th 배달 쿠폰(5명)"},
-    {"name": "Questioner Rewards", "detail": "질문한 모든 분께 기념품을 드립니다. (선착순, 수량 한정)"}
+    {"name": "Lucky Draw", "detail": "Open to all attendees. Collect three stamps on the name tag you receive at registration to get a draw ticket.\n1st Wireless headphones (1) · 2nd Gift card (2) · 3rd Wireless mouse (3) · 4th Food delivery coupon (5)"},
+    {"name": "Questioner Rewards", "detail": "Everyone who asks a question receives a souvenir (first come, first served; while supplies last)."}
   ],
   laboratories: [
     {"name": "Laboratory of Neurobehavior and Neural Circuits", "detail": "Prof. Kyuhyung Kim", "group": "In DGIST"},
